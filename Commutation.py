@@ -1,5 +1,5 @@
 """
-Данная версия имитирует интерфейс программы проверки коммутации
+Программа проверки коммутации
 """
 import sys
 import time
@@ -7,6 +7,7 @@ import random
 import socket
 import struct
 import pyautogui
+import operator
 from pythonping import ping
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QApplication
@@ -5222,106 +5223,240 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.d5o_10_1,
             self.ui.d5o_12_1]
 
+        D2_D3 = [4, 1, 8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 4, 1,
+                 8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 1, 5, 2, 6, 3, 7]
+        D4 = [1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5, 2, 3, 4, 8, 7, 6]
+        D5 = [1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2, 3, 5, 7, 8, 6, 4]
+
+        # IP адреса ЦОС 4201 НД и ЦОС 4201 ВД
         IP_4201 = '192.168.10.100'
-        IP_4202 = '192.168.10.100'
+        IP_4202 = '192.168.10.101'
+
+        sock_listen = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+        sock_listen.bind(('', 2004))
+
+        response_list_0 = ping(IP_4201, size=40, count=10)  # PV-4201
+        response_list_1 = ping(IP_4202, size=40, count=10)  # PV-4202
+
+        if 0 < response_list_0.rtt_avg_ms < 2 and 0 < response_list_1.rtt_avg_ms < 2:  # проверка времени пинга
+            self.ui.text += 'Network Active\n'
+            PING = True
+
+        else:
+            self.ui.text += 'Network Error\n'
+            if 0 < response_list_0.rtt_avg_ms < 1:
+                pass
+            else:
+                PING = False
+            if 0 < response_list_1.rtt_avg_ms < 1:
+                pass
+            else:
+                self.ui.text += 'Проверьте подключение PV-4202\n'
+                PING = False
+        self.ui.textEdit.setText(self.ui.text)
 
         PING = True
 
-        if PING:    # Ping check
+        if PING == True:
+            # Перевод блока ЦОС в режим паузы командой 0х80
+            C_Pause = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
+            C_Pause = C_Pause.split(':')
+            C_Pause = ''.join(C_Pause)  # преобразует байты в строку
+            # Перевод РПУ переведен в режим тестирования (командой 0х8А????)
+            C_Techn = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:4c:80'
+            C_Techn = C_Techn.split(':')
+            C_Techn = ''.join(C_Techn)  # преобразует байты в строку
+
+            """
+            При входе в технологический режим предполагается, что блок ЦОС предварительно переведен
+            в режим паузы командой 0х80, а затем РПУ переведен в Режим тестирования и настроен на 
+            требуемую частоту приема и прочие параметры, при помощи отладочного пакета управления РПУ 0х8А.
+            """
+
+            """ Перевод в технологический режим  ЦОС 4201 НД """
+            sock_send = socket.socket(
+                socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+            sock_send.bind(('', 2000))
+            # Перевод блока ЦОС в режим паузы командой 0х80
+            sock_send.sendto(bytes.fromhex(C_Pause), (IP_4201, 2000))
+            time.sleep(1)
+            # Перевод РПУ переведен в режим тестирования (командой 0х8А)
+            sock_send.sendto(bytes.fromhex(C_Freq), (IP_4201, 2000))
+            """ Перевод в технологический режим ЦОС 4201 ВД """
+            sock_send = socket.socket(
+                socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+            sock_send.bind(('', 2000))
+            # Перевод блока ЦОС в режим паузы командой 0х80
+            sock_send.sendto(bytes.fromhex(C_Pause), (IP_4202, 2000))
+            time.sleep(1)
+            # Перевод РПУ переведен в режим тестирования (командой 0х8А)
+            sock_send.sendto(bytes.fromhex(C_Freq), (IP_4202, 2000))
 
             bands = ['D2', 'D3', 'D4', 'D5']
-
-            """
-            В данном цикле, последовательно опрашивается каждый диапазон PV-0303
-            """
-            for band in bands:  # Survey of receiver
+            for band in bands:
 
                 if band == 'D2':
-                    x = 30
-                    ip = IP_4201
-                if band == 'D3':
-                    x = 30
-                    ip = IP_4201
-                if band == 'D4':
-                    x = 90
-                    ip = IP_4201
-                if band == 'D5':
-                    x = 90
-                    ip = IP_4202
+                    # Отладочный пакет управления РПУ 0х8А с установленной частотой 2 ГГц
+                    C_Freq = '26:00:8a:00:02:00:00:00:03:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
+                    C_Freq = C_Freq.split(':')
+                    C_Freq = ''.join(C_Freq)
+                    sock_send = socket.socket(
+                        socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+                    sock_send.bind(('', 2000))
+                    sock_send.sendto(bytes.fromhex(C_Freq), (IP_4201, 2000))
+                    time.sleep(1) # определить задержу в будущем
 
-                """
-                В данном цикле, происходит обработка массива принятых значений амплитуд от кассет ЦОС
-                """
-                for f in range(0, x):  # Circle
+                elif band == 'D3':
+                    # Отладочный пакет управления РПУ 0х8А с установленной частотой 4 ГГц
+                    C_Freq = '26:00:8a:00:02:00:08:00:03:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
+                    C_Freq = C_Freq.split(':')
+                    C_Freq = ''.join(C_Freq)
+                    sock_send = socket.socket(
+                        socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+                    sock_send.bind(('', 2000))
+                    sock_send.sendto(bytes.fromhex(C_Freq), (IP_4201, 2000))
+                    time.sleep(1) # определить задержу в будущем
 
-                    time.sleep(0.1)
+                elif band == 'D4':
+                    # Отладочный пакет управления РПУ 0х8А с установленной частотой 8 ГГц
+                    C_Freq = '26:00:8a:00:02:00:18:00:03:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
+                    C_Freq = C_Freq.split(':')
+                    C_Freq = ''.join(C_Freq)
+                    sock_send = socket.socket(
+                        socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+                    sock_send.bind(('', 2000))
+                    sock_send.sendto(bytes.fromhex(C_Freq), (IP_4201, 2000))
+                    time.sleep(1) # определить задержу в будущем
 
-                    while True:
+                elif band == 'D5':
+                    # Отладочный пакет управления РПУ 0х8А с установленной частотой 18 ГГц
+                    C_Freq = '26:00:8a:00:02:00:00:00:03:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
+                    C_Freq = C_Freq.split(':')
+                    C_Freq = ''.join(C_Freq)
+                    sock_send = socket.socket(
+                        socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+                    sock_send.bind(('', 2000))
+                    sock_send.sendto(bytes.fromhex(C_Freq), (IP_4202, 2000))
+                    time.sleep(1) # определить задержу в будущем
 
-                        data = [random.randint(0, 100) for i in range(100)]
+                else:
+                    pass
 
-                        if len(data) >= 30:  # проверка посылки на длительность
-                            if len(data) > 20:
-                                if band == 'D2':
-                                    d2[f].setStyleSheet(
-                                        "background-color: rgb(10, 150, 10);")
-                                    self.ui.text += 'МШУ Д2 - ' + \
-                                        str(f) + ' Ок\n'
-                                    self.ui.textEdit.setText(self.ui.text)
-                                    self.ui.textEdit.moveCursor(
-                                        QtGui.QTextCursor.End)
-                                    self.ui.textEdit.ensureCursorVisible()
-                                    QApplication.processEvents()
-                                if band == 'D3':
-                                    d3[f].setStyleSheet(
-                                        "background-color: rgb(10, 150, 10);")
-                                    self.ui.text += 'МШУ Д3 - ' + \
-                                        str(f) + ' Ок\n'
-                                    self.ui.textEdit.setText(self.ui.text)
-                                    self.ui.textEdit.moveCursor(
-                                        QtGui.QTextCursor.End)
-                                    self.ui.textEdit.ensureCursorVisible()
-                                    QApplication.processEvents()
-                                if band == 'D4':
-                                    d4[f].setStyleSheet(
-                                        "background-color: rgb(10, 150, 10);")
-                                    self.ui.text += 'МШУ Д4 - ' + \
-                                        str(f) + ' Ок\n'
-                                    self.ui.textEdit.setText(self.ui.text)
-                                    self.ui.textEdit.moveCursor(
-                                        QtGui.QTextCursor.End)
-                                    self.ui.textEdit.ensureCursorVisible()
-                                    QApplication.processEvents()
-                                if band == 'D5':
-                                    d5[f].setStyleSheet(
-                                        "background-color: rgb(10, 150, 10);")
-                                    self.ui.text += 'МШУ Д5 - ' + \
-                                        str(f) + ' Ок\n'
-                                    self.ui.textEdit.setText(self.ui.text)
-                                    self.ui.textEdit.moveCursor(
-                                        QtGui.QTextCursor.End)
-                                    self.ui.textEdit.ensureCursorVisible()
-                                    QApplication.processEvents()
-                            else:
-                                if band == 'D2':
-                                    d2[f].setStyleSheet(
-                                        "background-color: rgb(150, 10, 10);")
-                                if band == 'D3':
-                                    d3[f].setStyleSheet(
-                                        "background-color: rgb(150, 10, 10);")
-                                if band == 'D4':
-                                    d4[f].setStyleSheet(
-                                        "background-color: rgb(150, 10, 10);")
-                                if band == 'D5':
-                                    d5[f].setStyleSheet(
-                                        "background-color: rgb(150, 10, 10);")
+                # Прием ответа на запрос
+                while True:
+                    # формируем буфер
+                    data, adrr = sock_listen.recvfrom(2048)
+                    # проверка посылки на длительность
+                    if len(data) == 448:
+                        pass
+                        # преобразование посылки из hex в dec (младший байт
+                        # первый, старший байт второй)
+                        data = list(
+                            struct.unpack(
+                                '<' + 'H' * 448,
+                                data))  # преобразование посылки
+                    elif len(data) == 1448:
+                        pass
+                        data = list(struct.unpack('<' + 'H' * 1448, data))
+                    else:
+                        continue
 
-                            break
+                    # удаление первых 4 символов протокола(размер посылки, команда, кол-во пакетов,
+                    # номер пакета)
+                    del data[0:4]
+
+                    # деление посылки на отрезки по 8 каналов
+                    data = [data[i:i + 8] for i in range(0, len(data), 8)]
+
+                    # поиск максимальной амплитуды в кассетах ЦОС
+                    max_lst = [i.index(max(i)) + 1 for i in data]
+                    # поиск совпадений с эталонным массивом
+                    if band == 'D2':
+                        comparison = [
+                            i for i in map(
+                                operator.eq, D2_D3, max_lst)]
+                        print(comparison)
+                    elif band == 'D3':
+                        comparison = [
+                            i for i in map(
+                                operator.eq, D2_D3, max_lst)]
+                    elif band == 'D4':
+                        comparison = [i for i in map(operator.eq, D4, max_lst)]
+                    elif band == 'D5':
+                        comparison = [i for i in map(operator.eq, D5, max_lst)]
+                    else:
+                        continue
+                    k = -1
+                    for i in comparison:
+                        time.sleep(0.1) # определить задержу в будущем
+                        k += 1
+                        if i == True:
+                            color = "background-color: rgb(10, 150, 10);"
+                            status = " connected\n"
+                        else:
+                            color = "background-color: rgb(150, 10, 10);"
+                            status = " not connected\n"
+                        if band == 'D2':
+                            d2[k].setStyleSheet(
+                                color)
+                            self.ui.text += 'МШУ Д2 - ' + \
+                                            str(k + 1) + status
+                            self.ui.textEdit.setText(self.ui.text)
+                            self.ui.textEdit.moveCursor(
+                                QtGui.QTextCursor.End)
+                            self.ui.textEdit.ensureCursorVisible()
+                            QApplication.processEvents()
+                        elif band == 'D3':
+                            d3[k].setStyleSheet(
+                                color)
+                            self.ui.text += 'МШУ Д3 - ' + \
+                                            str(k + 1) + status
+                            self.ui.textEdit.setText(self.ui.text)
+                            self.ui.textEdit.moveCursor(
+                                QtGui.QTextCursor.End)
+                            self.ui.textEdit.ensureCursorVisible()
+                            QApplication.processEvents()
+                        elif band == 'D4':
+                            d4[k].setStyleSheet(
+                                color)
+                            self.ui.text += 'МШУ Д4 - ' + \
+                                            str(k + 1) + status
+                            self.ui.textEdit.setText(self.ui.text)
+                            self.ui.textEdit.moveCursor(
+                                QtGui.QTextCursor.End)
+                            self.ui.textEdit.ensureCursorVisible()
+                            QApplication.processEvents()
+                        elif band == 'D5':
+                            d5[k].setStyleSheet(
+                                color)
+                            self.ui.text += 'МШУ Д5 - ' + \
+                                            str(k + 1) + status
+                            self.ui.textEdit.setText(self.ui.text)
+                            self.ui.textEdit.moveCursor(
+                                QtGui.QTextCursor.End)
+                            self.ui.textEdit.ensureCursorVisible()
+                            QApplication.processEvents()
+                        else:
+                            pass
+                    break
+        else:
+            print('Not connection')
 
 
 app = QtWidgets.QApplication([])
 application = mywindow()
 application.show()
+
 sys.exit(app.exec())
 
 if __name__ == "__main__":
