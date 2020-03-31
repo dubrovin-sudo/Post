@@ -5266,7 +5266,7 @@ class mywindow(QtWidgets.QMainWindow):
 
         PING = True
 
-        if PING:
+        if PING == True:
             # # Перевод блока ЦОС в режим паузы командой 0х80
             # C_Pause = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
             # C_Pause = C_Pause.split(':')
@@ -5286,7 +5286,7 @@ class mywindow(QtWidgets.QMainWindow):
                     # sock_send = socket.socket(
                     #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
                     # sock_send.bind(('', 2000))
-                    # # оправляет тестовую команду в UDP порт
+                    # # Перевод блока ЦОС в режим паузы командой 0х80
                     # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
                     # time.sleep(1)
                     # # вид посылки для PV-4201
@@ -5296,7 +5296,7 @@ class mywindow(QtWidgets.QMainWindow):
                     # sock_send = socket.socket(
                     #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
                     # sock_send.bind(('', 2000))
-                    # # оправляет тестовую команду в UDP порт
+                    # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
                     # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
                     # time.sleep(1)
 
@@ -5307,7 +5307,7 @@ class mywindow(QtWidgets.QMainWindow):
                     # sock_send = socket.socket(
                     #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
                     # sock_send.bind(('', 2000))
-                    # # оправляет тестовую команду в UDP порт
+                    # # Перевод блока ЦОС в режим паузы командой 0х80
                     # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
                     # time.sleep(1)
                     # # вид посылки для PV-4201
@@ -5317,7 +5317,7 @@ class mywindow(QtWidgets.QMainWindow):
                     # sock_send = socket.socket(
                     #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
                     # sock_send.bind(('', 2000))
-                    # # оправляет тестовую команду в UDP порт
+                    # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
                     # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
                     # time.sleep(1)
 
@@ -5328,7 +5328,7 @@ class mywindow(QtWidgets.QMainWindow):
                     # sock_send = socket.socket(
                     #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
                     # sock_send.bind(('', 2000))
-                    # # оправляет тестовую команду в UDP порт
+                    # # Перевод блока ЦОС в режим паузы командой 0х80
                     # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
                     # time.sleep(1)
                     # # вид посылки для PV-4201
@@ -5338,7 +5338,7 @@ class mywindow(QtWidgets.QMainWindow):
                     # sock_send = socket.socket(
                     #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
                     # sock_send.bind(('', 2000))
-                    # # оправляет тестовую команду в UDP порт
+                    # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
                     # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
                     # time.sleep(1)
 
@@ -5348,7 +5348,7 @@ class mywindow(QtWidgets.QMainWindow):
                     # sock_send = socket.socket(
                     #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
                     # sock_send.bind(('', 2000))
-                    # # оправляет тестовую команду в UDP порт
+                    # # Перевод блока ЦОС в режим паузы командой 0х80
                     # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
                     # time.sleep(1)
                     # # вид посылки для PV-4201
@@ -5358,7 +5358,7 @@ class mywindow(QtWidgets.QMainWindow):
                     # sock_send = socket.socket(
                     #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
                     # sock_send.bind(('', 2000))
-                    # # оправляем тестовую команду в UDP порт
+                    # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
                     # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
                     # time.sleep(1)
 
@@ -5412,7 +5412,7 @@ class mywindow(QtWidgets.QMainWindow):
                     for i in comparison:
                         time.sleep(0.1)
                         k += 1
-                        if i:
+                        if i == True:
                             color = "background-color: rgb(10, 150, 10);"
                             status = " connected\n"
                         else:
