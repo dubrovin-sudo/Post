@@ -5223,20 +5223,21 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.d5o_10_1,
             self.ui.d5o_12_1]
 
-        D2_D3 = [4, 1, 8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 4, 1,
-                 8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 1, 5, 2, 6, 3, 7]
-        D4 = [1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
-              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
-              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
-              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
-              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
-              1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5, 2, 3, 4, 8, 7, 6]
-        D5 = [1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
-              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
-              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
-              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
-              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
-              1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2, 3, 5, 7, 8, 6, 4]
+        # Эталонные значение № кассет ЦОС
+        std_d2 = [4, 1, 8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 4, 1,
+                  8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 1, 5, 2, 6, 3, 7]
+        std_d4 = [1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+                  1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+                  1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+                  1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+                  1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+                  1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5, 2, 3, 4, 8, 7, 6]
+        std_d5 = [1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+                  1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+                  1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+                  1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+                  1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+                  1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2, 3, 5, 7, 8, 6, 4]
 
         # IP адреса ЦОС 4201 НД и ЦОС 4201 ВД
         IP_4201 = '192.168.10.100'
@@ -5267,145 +5268,89 @@ class mywindow(QtWidgets.QMainWindow):
 
         PING = True
 
-        if PING == True:
-            # # Перевод блока ЦОС в режим паузы командой 0х80
-            # C_Pause = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
-            # C_Pause = C_Pause.split(':')
-            # C_Pause = ''.join(C_Pause)  # преобразует байты в строку
-            # # Перевод РПУ переведен в режим тестирования (командой 0х8А????)
-            # C_Techn = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:4c:80'
-            # C_Techn = C_Techn.split(':')
-            # C_Techn = ''.join(C_Techn)  # преобразует байты в строку
+        if PING:
+            # Команда 0х80 для перевода блока ЦОС в режим паузы
+            c_pause = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:' \
+                      '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
+            c_pause = c_pause.split(':')
+            c_pause = ''.join(c_pause)  # преобразует байты в строку
+            # Команда ?
+            c_techn = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:' \
+                      '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:4c:80'
+            c_techn = c_techn.split(':')
+            c_techn = ''.join(c_techn)  # преобразует байты в строку
+            # Команда 0х8А для перевода блока ЦОС в режим тестирования и смены
+            # частоты
+            c_freq = '26:00:8a:00:02:00:08:00:03:00:00:00:00:00:00:00:00:00:00:00:' \
+                     '00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
+            c_freq = c_freq.split(':')
+            c_freq = ''.join(c_freq)
 
             """
             При входе в технологический режим предполагается, что блок ЦОС предварительно переведен
-            в режим паузы командой 0х80, а затем РПУ переведен в Режим тестирования и настроен на 
+            в режим паузы командой 0х80, а затем РПУ переведен в Режим тестирования и настроен на
             требуемую частоту приема и прочие параметры, при помощи отладочного пакета управления РПУ 0х8А.
             """
-            ip = IP_4201
-            # sock_send = socket.socket(
-            #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-            # sock_send.bind(('', 2000))
-            # # Перевод блока ЦОС в режим паузы командой 0х80
-            # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
-            # time.sleep(1)
-            # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
-            # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
-            ip = IP_4202
-            # sock_send = socket.socket(
-            #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-            # sock_send.bind(('', 2000))
-            # # Перевод блока ЦОС в режим паузы командой 0х80
-            # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
-            # time.sleep(1)
-            # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
-            # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
 
-            bands = ['D2', 'D3', 'D4', 'D5']
+            """ Перевод в технологический режим  ЦОС 4201 НД """
+            # sock_send = socket.socket(
+            #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+            # sock_send.bind(('', 2000))
+            # # Перевод блока ЦОС в режим паузы командой 0х80
+            # sock_send.sendto(bytes.fromhex(c_pause), (IP_4201, 2000))
+            # time.sleep(1)
+            # # Перевод РПУ переведен в режим тестирования (командой 0х8А????)
+            # sock_send.sendto(bytes.fromhex(c_techn), (IP_4201, 2000))
+            # """ Перевод в технологический режим ЦОС 4201 ВД """
+            # sock_send = socket.socket(
+            #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+            # sock_send.bind(('', 2000))
+            # # Перевод блока ЦОС в режим паузы командой 0х80
+            # sock_send.sendto(bytes.fromhex(c_pause), (IP_4202, 2000))
+            # time.sleep(1)
+            # # Перевод РПУ переведен в режим тестирования (командой 0х8А????)
+            # sock_send.sendto(bytes.fromhex(c_techn), (IP_4202, 2000))
+
+            # обращение к интерфейсу
+            bands = {'D2': d2, 'D3': d3, 'D4': d4, 'D5': d5}
+            # длина поссылки
+            band_len = {'D2': 244, 'D3': 244, 'D4': 724, 'D5': 724}
+            # ip адрес
+            ip = {'D2': IP_4201, 'D3': IP_4201, 'D4': IP_4201, 'D5': IP_4202}
+            # код частоты
+            freq = {'D2': '00', 'D3': '08', 'D4': '18', 'D5': '00'}
+            # эталонный массив № кассет ЦОС
+            std = {'D2': std_d2, 'D3': std_d2, 'D4': std_d4, 'D5': std_d5}
+            # текст для бегущей строки
+            band_rus = {'D2': 'Д2 - ', 'D3': 'Д3 - ', 'D4': 'Д4 - ', 'D5': 'Д5 - '}
+
             for band in bands:
+                # Отладочный пакет управления РПУ 0х8А с установленной частотой
+                # freq[band] ГГц
+                c_freq = c_freq[:12] + freq[band] + c_freq[14:]
+                # # Настройка порта
+                # sock_send = socket.socket(
+                #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+                # sock_send.bind(('', 2000))
+                # # Отправка отладочного пакета управления РПУ 0х8А с установленной частотой freq[band] ГГц на адрес ip[band]
+                # sock_send.sendto(bytes.fromhex(c_freq), (ip[band], 2000))
+                time.sleep(1)  # определить задержу в будущем
 
-                if band == 'D2':
-                    data = [random.randint(-40, 40) for i in range(244)]
-
-                    # ip = IP_4201
-                    # sock_send = socket.socket(
-                    #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-                    # sock_send.bind(('', 2000))
-                    # # Перевод блока ЦОС в режим паузы командой 0х80
-                    # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
-                    # time.sleep(1)
-                    # # вид посылки для PV-4201
-                    # C_Freq = '26:00:8a:00:02:00:00:00:03:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
-                    # C_Freq = C_Freq.split(':')
-                    # C_Freq = ''.join(C_Freq)
-                    # sock_send = socket.socket(
-                    #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-                    # sock_send.bind(('', 2000))
-                    # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
-                    # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
-                    # time.sleep(1)
-
-                elif band == 'D3':
-                    data = [random.randint(-40, 40) for i in range(244)]
-
-                    # ip = IP_4201
-                    # sock_send = socket.socket(
-                    #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-                    # sock_send.bind(('', 2000))
-                    # # Перевод блока ЦОС в режим паузы командой 0х80
-                    # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
-                    # time.sleep(1)
-                    # # вид посылки для PV-4201
-                    # C_Freq = '26:00:8a:00:02:00:08:00:03:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
-                    # C_Freq = C_Freq.split(':')
-                    # C_Freq = ''.join(C_Freq)
-                    # sock_send = socket.socket(
-                    #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-                    # sock_send.bind(('', 2000))
-                    # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
-                    # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
-                    # time.sleep(1)
-
-                elif band == 'D4':
-                    data = [random.randint(-40, 40) for i in range(724)]
-
-                    # ip = IP_4201
-                    # sock_send = socket.socket(
-                    #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-                    # sock_send.bind(('', 2000))
-                    # # Перевод блока ЦОС в режим паузы командой 0х80
-                    # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
-                    # time.sleep(1)
-                    # # вид посылки для PV-4201
-                    # C_Freq = '26:00:8a:00:02:00:18:00:03:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
-                    # C_Freq = C_Freq.split(':')
-                    # C_Freq = ''.join(C_Freq)
-                    # sock_send = socket.socket(
-                    #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-                    # sock_send.bind(('', 2000))
-                    # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
-                    # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
-                    # time.sleep(1)
-
-                elif band == 'D5':
-                    data = [random.randint(-40, 40) for i in range(724)]
-                    # ip = IP_4202
-                    # sock_send = socket.socket(
-                    #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-                    # sock_send.bind(('', 2000))
-                    # # Перевод блока ЦОС в режим паузы командой 0х80
-                    # sock_send.sendto(bytes.fromhex(C_Pause), (ip, 2000))
-                    # time.sleep(1)
-                    # # вид посылки для PV-4201
-                    # C_Freq = '26:00:8a:00:02:00:00:00:03:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
-                    # C_Freq = C_Freq.split(':')
-                    # C_Freq = ''.join(C_Freq)
-                    # sock_send = socket.socket(
-                    #     socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-                    # sock_send.bind(('', 2000))
-                    # # Перевод РПУ переведен в режим тестирования (командой 0х8А)
-                    # sock_send.sendto(bytes.fromhex(C_Freq), (ip, 2000))
-                    # time.sleep(1)
-
-                else:
-                    pass
-
+                data = [random.randint(-40, 40) for i in range(band_len[band])]
+                # Прием ответа на запрос
                 while True:
                     # # формируем буфер
                     # data, adrr = sock_listen.recvfrom(2048)
                     # # проверка посылки на длительность
-                    if len(data) == 244:
-                        pass
+                    if len(data) == band_len[band]:
                         # # преобразование посылки из hex в dec (младший байт
                         # # первый, старший байт второй)
-                        # data = list(
-                        #     struct.unpack(
-                        #         '<' + 'H' * 244,
-                        #         data))  # преобразование посылки
-                    elif len(data) == 724:
+                        # data = list(struct.unpack('<' + 'H' * band_len[band],
+                        # data))  # преобразование посылки
                         pass
-                        # data = list(struct.unpack('<' + 'H' * 1448, data))
                     else:
+                        # ждем ответа, если не пришел пакет длительностью
+                        # band_len[band]
                         continue
 
                     # удаление первых 4 символов протокола(размер посылки, команда, кол-во пакетов,
@@ -5418,73 +5363,34 @@ class mywindow(QtWidgets.QMainWindow):
                     # поиск максимальной амплитуды в кассетах ЦОС
                     max_lst = [i.index(max(i)) + 1 for i in data]
                     # поиск совпадений с эталонным массивом
-                    if band == 'D2':
-                        comparison = [
-                            i for i in map(
-                                operator.eq, D2_D3, max_lst)]
-                        print(comparison)
-                    elif band == 'D3':
-                        comparison = [
-                            i for i in map(
-                                operator.eq, D2_D3, max_lst)]
-                    elif band == 'D4':
-                        comparison = [i for i in map(operator.eq, D4, max_lst)]
-                    elif band == 'D5':
-                        comparison = [i for i in map(operator.eq, D5, max_lst)]
-                    else:
-                        continue
+                    comparison = [
+                        i for i in map(
+                            operator.eq,
+                            std[band],
+                            max_lst)]
+                    print(comparison)
+
                     k = -1
                     for i in comparison:
-                        time.sleep(0.1)
+                        time.sleep(0.1)  # определить задержку в будущем
                         k += 1
-                        if i == True:
+                        if i:
                             color = "background-color: rgb(10, 150, 10);"
                             status = " connected\n"
                         else:
                             color = "background-color: rgb(150, 10, 10);"
                             status = " not connected\n"
-                        if band == 'D2':
-                            d2[k].setStyleSheet(
-                                color)
-                            self.ui.text += 'МШУ Д2 - ' + \
-                                            str(k + 1) + status
-                            self.ui.textEdit.setText(self.ui.text)
-                            self.ui.textEdit.moveCursor(
-                                QtGui.QTextCursor.End)
-                            self.ui.textEdit.ensureCursorVisible()
-                            QApplication.processEvents()
-                        elif band == 'D3':
-                            d3[k].setStyleSheet(
-                                color)
-                            self.ui.text += 'МШУ Д3 - ' + \
-                                            str(k + 1) + status
-                            self.ui.textEdit.setText(self.ui.text)
-                            self.ui.textEdit.moveCursor(
-                                QtGui.QTextCursor.End)
-                            self.ui.textEdit.ensureCursorVisible()
-                            QApplication.processEvents()
-                        elif band == 'D4':
-                            d4[k].setStyleSheet(
-                                color)
-                            self.ui.text += 'МШУ Д4 - ' + \
-                                            str(k + 1) + status
-                            self.ui.textEdit.setText(self.ui.text)
-                            self.ui.textEdit.moveCursor(
-                                QtGui.QTextCursor.End)
-                            self.ui.textEdit.ensureCursorVisible()
-                            QApplication.processEvents()
-                        elif band == 'D5':
-                            d5[k].setStyleSheet(
-                                color)
-                            self.ui.text += 'МШУ Д5 - ' + \
-                                            str(k + 1) + status
-                            self.ui.textEdit.setText(self.ui.text)
-                            self.ui.textEdit.moveCursor(
-                                QtGui.QTextCursor.End)
-                            self.ui.textEdit.ensureCursorVisible()
-                            QApplication.processEvents()
-                        else:
-                            pass
+                        # Обращение к интерфейсу (цвет ячейки, надпись в
+                        # строке)
+                        bands[band][k].setStyleSheet(
+                            color)
+                        self.ui.text += band_rus[band] + \
+                                        str(k + 1) + status
+                        self.ui.textEdit.setText(self.ui.text)
+                        self.ui.textEdit.moveCursor(
+                            QtGui.QTextCursor.End)
+                        self.ui.textEdit.ensureCursorVisible()
+                        QApplication.processEvents()
                     break
         else:
             print('Not connection')
