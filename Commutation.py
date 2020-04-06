@@ -10,7 +10,7 @@ import pyautogui
 import operator
 from pythonping import ping
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QApplication
+from PyQt5.QtWidgets import (QWidget, QApplication, QPushButton, QSlider, QVBoxLayout, QMessageBox)
 
 
 class Ui_MainWindow(object):
@@ -4118,15 +4118,6 @@ class Ui_MainWindow(object):
             QtCore.Qt.ScrollBarAlwaysOff)
         self.d5_8_8_1.setReadOnly(True)
         self.d5_8_8_1.setObjectName("d5_8_8_1")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(630, 860, 301, 31))
-        font = QtGui.QFont()
-        font.setFamily("Calibri")
-        font.setPointSize(18)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label.setFont(font)
-        self.label.setObjectName("label")
         self.label_31 = QtWidgets.QLabel(self.centralwidget)
         self.label_31.setGeometry(QtCore.QRect(10, 350, 71, 21))
         font = QtGui.QFont()
@@ -4159,14 +4150,6 @@ class Ui_MainWindow(object):
         font.setWeight(50)
         self.label_66.setFont(font)
         self.label_66.setObjectName("label_66")
-        self.label_67 = QtWidgets.QLabel(self.centralwidget)
-        self.label_67.setGeometry(QtCore.QRect(10, 10, 241, 21))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_67.setFont(font)
-        self.label_67.setObjectName("label_67")
         self.label_241 = QtWidgets.QLabel(self.centralwidget)
         self.label_241.setGeometry(QtCore.QRect(230, 530, 151, 21))
         font = QtGui.QFont()
@@ -4326,8 +4309,12 @@ class Ui_MainWindow(object):
         self.d5o_10_1.setReadOnly(True)
         self.d5o_10_1.setObjectName("d5o_10_1")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(290, 5, 91, 30))
+        self.pushButton.setGeometry(QtCore.QRect(200, 5, 180, 30))
         self.pushButton.setObjectName("pushButton")
+        self.pushButton.setEnabled(False)
+        self.pushButton_1 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_1.setGeometry(QtCore.QRect(10, 5, 180, 30))
+        self.pushButton_1.setObjectName("pushButton_1")
         self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
         self.textEdit.setGeometry(QtCore.QRect(10, 40, 370, 120))
         self.textEdit.setReadOnly(True)
@@ -4608,7 +4595,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Проверка коммутации МШУ в станции ПОСТ-3М"))
         self.gbA_1.setTitle(_translate("MainWindow", "1 сектор"))
         self.label_5.setText(_translate("MainWindow", "1 Вых"))
         self.label_6.setText(_translate("MainWindow", "2 Вых"))
@@ -4926,15 +4913,10 @@ class Ui_MainWindow(object):
         self.label_238.setText(_translate("MainWindow", "1 Вых"))
         self.groupBox_116.setTitle(_translate("MainWindow", "8 луч"))
         self.label_240.setText(_translate("MainWindow", "1 Вых"))
-        self.label.setText(_translate("MainWindow", "Проверка коммутации МШУ"))
         self.label_31.setText(_translate("MainWindow", "МШУ Д3"))
         self.label_63.setText(_translate("MainWindow", "МШУ Д2"))
         self.label_64.setText(_translate("MainWindow", "МШУ Д3"))
         self.label_66.setText(_translate("MainWindow", "МШУ Д2"))
-        self.label_67.setText(
-            _translate(
-                "MainWindow",
-                "Проверка коммутации МШУ"))
         self.label_241.setText(_translate("MainWindow", "МШУ Д5 - обзорные"))
         self.gbA_13.setTitle(_translate("MainWindow", "8 сект"))
         self.label_243.setText(_translate("MainWindow", "1 Вых"))
@@ -4949,6 +4931,7 @@ class Ui_MainWindow(object):
         self.gbA_14.setTitle(_translate("MainWindow", "10 сект"))
         self.label_245.setText(_translate("MainWindow", "1 Вых"))
         self.pushButton.setText(_translate("MainWindow", "Старт"))
+        self.pushButton_1.setText(_translate("MainWindow", "Проверить подключение"))
         self.gbA_19.setTitle(_translate("MainWindow", "11 сект"))
         self.label_248.setText(_translate("MainWindow", "1 Вых"))
         self.label_65.setText(_translate("MainWindow", "2 Вых"))
@@ -4975,8 +4958,65 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.btnClicked)
+        self.ui.pushButton_1.clicked.connect(self.btn_1Clicked)
+
+    """
+    v   Получение логов при ошибке
+    """
+
+    def log_uncaught_exceptions(ex_cls, ex, tb):
+        text = '{}: {}:\n'.format(ex_cls.__name__, ex)
+        import traceback
+        text += ''.join(traceback.format_tb(tb))
+
+        print(text)
+        quit()
+
+    import sys
+    sys.excepthook = log_uncaught_exceptions
+
+    """
+    ^
+    """
+
+    def btn_1Clicked(self):
+        self.ui.text += 'Запрос ответа от PV-4202...\n'
+        self.ui.textEdit.setText(self.ui.text)
+        self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
+        QApplication.processEvents()
+
+        # IP адреса ЦОС 4201 НД и ЦОС 4201 ВД (192.168.10.100, 192.168.10.101)
+        IP_4201 = '192.168.10.100'
+        IP_4202 = '192.168.10.101'
+
+        response_list_0 = ping(IP_4201, size=40, count=10)  # PV-4201
+        response_list_1 = ping(IP_4202, size=40, count=10)  # PV-4202
+
+        if 0 < response_list_0.rtt_avg_ms < 2 and 0 < response_list_1.rtt_avg_ms < 2:  # проверка времени пинга
+            self.ui.text += 'Ответ получен.\n'
+            self.ui.text += 'Нажмите кнопку Старт...\n'
+            self.ui.pushButton.setEnabled(True)
+            PING = True
+
+        else:
+            self.ui.text += 'Ответа нет!\n'
+            if 0 < response_list_0.rtt_avg_ms < 1:
+                pass
+            else:
+                PING = False
+            if 0 < response_list_1.rtt_avg_ms < 1:
+                pass
+            else:
+                self.ui.text += 'Проверьте подключение PV-4202!\n'
+                PING = False
+            self.ui.pushButton.setEnabled(False)
+        self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        self.ui.textEdit.setText(self.ui.text)
 
     def btnClicked(self):
+
+        self.ui.pushButton.setEnabled(False)
+        self.ui.pushButton_1.setEnabled(False)
 
         d2 = [
             self.ui.d2_1_1,
@@ -5269,6 +5309,7 @@ class mywindow(QtWidgets.QMainWindow):
         PING = True
 
         if PING:
+
             # Команда 0х80 для перевода блока ЦОС в режим паузы
             c_pause = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:' \
                       '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
@@ -5392,6 +5433,10 @@ class mywindow(QtWidgets.QMainWindow):
                         self.ui.textEdit.ensureCursorVisible()
                         QApplication.processEvents()
                     break
+
+            self.ui.pushButton.setEnabled(True)
+            self.ui.pushButton_1.setEnabled(True)
+
         else:
             print('Not connection')
 
