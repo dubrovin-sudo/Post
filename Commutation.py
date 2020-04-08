@@ -21,7 +21,12 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setEnabled(True)
         self.centralwidget.setObjectName("centralwidget")
-        self.text = ""
+        """ Пользовательские глобальные переменные """
+        self.IP_4201 = '192.168.10.100' # переменная для ip PV-4201
+        self.IP_4202 = '192.168.10.101' # переменная для ip PV-4201
+        self.PING = False # дефолтная boolean переменная для пинга
+        self.text = ""  # дефолтная переменная для текстовых данных
+        """                                        """
         self.gbA_1 = QtWidgets.QGroupBox(self.centralwidget)
         self.gbA_1.setGeometry(QtCore.QRect(100, 170, 71, 101))
         font = QtGui.QFont()
@@ -4589,7 +4594,6 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -4953,6 +4957,7 @@ class Ui_MainWindow(object):
 
 
 class mywindow(QtWidgets.QMainWindow):
+
     def __init__(self):
         super(mywindow, self).__init__()
         self.ui = Ui_MainWindow()
@@ -4960,9 +4965,8 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.pushButton.clicked.connect(self.btnClicked)
         self.ui.pushButton_1.clicked.connect(self.btn_1Clicked)
 
-    """
-    v   Получение логов при ошибке
-    """
+
+    """ Метод получения логов при ошибке """
 
     def log_uncaught_exceptions(ex_cls, ex, tb):
         text = '{}: {}:\n'.format(ex_cls.__name__, ex)
@@ -4972,51 +4976,65 @@ class mywindow(QtWidgets.QMainWindow):
         print(text)
         quit()
 
-    import sys
-    sys.excepthook = log_uncaught_exceptions
-
-    """
-    ^
-    """
 
     def btn_1Clicked(self):
-        self.ui.text += 'Запрос ответа от PV-4202...\n'
+        self.ui.text = 'Запрос ответа от PV-4201 и PV-4202...\n'
         self.ui.textEdit.setText(self.ui.text)
         self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         QApplication.processEvents()
 
-        # IP адреса ЦОС 4201 НД и ЦОС 4201 ВД (192.168.10.100, 192.168.10.101)
-        IP_4201 = '192.168.10.100'
-        IP_4202 = '192.168.10.101'
+        # response_list_0 = ping(self.ui.IP_4201, size=40, count=10)  # PV-4201
+        # response_list_1 = ping(self.ui.IP_4202, size=40, count=10)  # PV-4202
+        #
+        # if 0 < response_list_0.rtt_avg_ms < 2 and 0 < response_list_1.rtt_avg_ms < 2:  # проверка времени пинга
+        #     self.ui.text = 'Подключение установлено.\n'
+        #     self.ui.text += 'Нажмите кнопку Старт...\n'
+        #     self.ui.pushButton.setEnabled(True)
+        #     self.ui.PING = True
+        #
+        # else:
+        #     self.ui.text = 'Ответа нет!\n'
+        #     if 0 < response_list_0.rtt_avg_ms < 1:
+        #         pass
+        #     else:
+        #         self.ui.text += 'Проверьте подключение PV-4201!\n'
+        #         self.ui.PING = False
+        #     if 0 < response_list_1.rtt_avg_ms < 1:
+        #         pass
+        #     else:
+        #         self.ui.text += 'Проверьте подключение PV-4202!\n'
+        #         self.ui.PING = False
+        #     self.ui.pushButton.setEnabled(False)
+        # self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+        # self.ui.textEdit.setText(self.ui.text)
 
-        response_list_0 = ping(IP_4201, size=40, count=10)  # PV-4201
-        response_list_1 = ping(IP_4202, size=40, count=10)  # PV-4202
 
-        if 0 < response_list_0.rtt_avg_ms < 2 and 0 < response_list_1.rtt_avg_ms < 2:  # проверка времени пинга
-            self.ui.text += 'Ответ получен.\n'
+        """
+        Код выше раскомментить. Код ниже для имитации работы кнопки "Проверка подключения" (подлежит удалению).
+        """
+        self.ui.PING = True # изменить значение переменной для наличия/отсутствия подключения при имитации
+
+        if self.ui.PING == True:
+            self.ui.text = 'Подключение установлено.\n'
             self.ui.text += 'Нажмите кнопку Старт...\n'
             self.ui.pushButton.setEnabled(True)
-            PING = True
-
         else:
-            self.ui.text += 'Ответа нет!\n'
-            if 0 < response_list_0.rtt_avg_ms < 1:
-                pass
-            else:
-                PING = False
-            if 0 < response_list_1.rtt_avg_ms < 1:
-                pass
-            else:
-                self.ui.text += 'Проверьте подключение PV-4202!\n'
-                PING = False
+            time.sleep(5)
+            self.ui.text = 'Ответа нет!\n'
+            self.ui.text += 'Проверьте подключение PV-4201!\n'
+            self.ui.text += 'Проверьте подключение PV-4202!\n'
             self.ui.pushButton.setEnabled(False)
+
         self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.ui.textEdit.setText(self.ui.text)
 
+
     def btnClicked(self):
+
 
         self.ui.pushButton.setEnabled(False)
         self.ui.pushButton_1.setEnabled(False)
+
 
         d2 = [
             self.ui.d2_1_1,
@@ -5279,36 +5297,9 @@ class mywindow(QtWidgets.QMainWindow):
                   1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
                   1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2, 3, 5, 7, 8, 6, 4]
 
-        # IP адреса ЦОС 4201 НД и ЦОС 4201 ВД
-        IP_4201 = '192.168.10.100'
-        IP_4202 = '192.168.10.101'
 
-        # sock_listen = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-        # sock_listen.bind(('', 2004))
-        #
-        # response_list_0 = ping(IP_4201, size=40, count=10)  # PV-4201
-        # response_list_1 = ping(IP_4202, size=40, count=10)  # PV-4202
-        #
-        # if 0 < response_list_0.rtt_avg_ms < 2 and 0 < response_list_1.rtt_avg_ms < 2:  # проверка времени пинга
-        #     self.ui.text += 'Network Active\n'
-        #     PING = True
-        #
-        # else:
-        #     self.ui.text += 'Network Error\n'
-        #     if 0 < response_list_0.rtt_avg_ms < 1:
-        #         pass
-        #     else:
-        #         PING = False
-        #     if 0 < response_list_1.rtt_avg_ms < 1:
-        #         pass
-        #     else:
-        #         self.ui.text += 'Проверьте подключение PV-4202\n'
-        #         PING = False
-        # self.ui.textEdit.setText(self.ui.text)
+        if self.ui.PING:
 
-        PING = True
-
-        if PING:
 
             # Команда 0х80 для перевода блока ЦОС в режим паузы
             c_pause = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:' \
@@ -5357,7 +5348,7 @@ class mywindow(QtWidgets.QMainWindow):
             # длина поссылки
             band_len = {'D2': 244, 'D3': 244, 'D4': 724, 'D5': 724}
             # ip адрес
-            ip = {'D2': IP_4201, 'D3': IP_4201, 'D4': IP_4201, 'D5': IP_4202}
+            ip = {'D2': self.ui.IP_4201, 'D3': self.ui.IP_4201, 'D4': self.ui.IP_4201, 'D5': self.ui.IP_4202}
             # код частоты
             freq = {'D2': '00', 'D3': '08', 'D4': '18', 'D5': '00'}
             # эталонный массив № кассет ЦОС
@@ -5440,6 +5431,8 @@ class mywindow(QtWidgets.QMainWindow):
         else:
             print('Not connection')
 
+    import sys
+    sys.excepthook = log_uncaught_exceptions
 
 app = QtWidgets.QApplication([])
 application = mywindow()
