@@ -10,7 +10,9 @@ import pyautogui
 import operator
 from pythonping import ping
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import (QWidget, QApplication, QPushButton, QSlider, QVBoxLayout, QMessageBox)
+from PyQt5.QtGui import QIcon, QIntValidator
+from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import QWidget, QApplication
 
 
 class Ui_MainWindow(object):
@@ -4314,12 +4316,17 @@ class Ui_MainWindow(object):
         self.d5o_10_1.setReadOnly(True)
         self.d5o_10_1.setObjectName("d5o_10_1")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(200, 5, 180, 30))
+        self.pushButton.setGeometry(QtCore.QRect(220, 5, 160, 30))
         self.pushButton.setObjectName("pushButton")
         self.pushButton.setEnabled(False)
         self.pushButton_1 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_1.setGeometry(QtCore.QRect(10, 5, 180, 30))
+        self.pushButton_1.setGeometry(QtCore.QRect(50, 5, 160, 30))
         self.pushButton_1.setObjectName("pushButton_1")
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_2.setGeometry(QtCore.QRect(10, 5, 30, 30))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.setIcon(QIcon("gear.png"))
+        self.pushButton_2.setIconSize(QSize(25, 25))
         self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
         self.textEdit.setGeometry(QtCore.QRect(10, 40, 370, 120))
         self.textEdit.setReadOnly(True)
@@ -4936,6 +4943,7 @@ class Ui_MainWindow(object):
         self.label_245.setText(_translate("MainWindow", "1 Вых"))
         self.pushButton.setText(_translate("MainWindow", "Старт"))
         self.pushButton_1.setText(_translate("MainWindow", "Проверить подключение"))
+        self.pushButton_2.setText(_translate("MainWindow", ""))
         self.gbA_19.setTitle(_translate("MainWindow", "11 сект"))
         self.label_248.setText(_translate("MainWindow", "1 Вых"))
         self.label_65.setText(_translate("MainWindow", "2 Вых"))
@@ -4955,6 +4963,143 @@ class Ui_MainWindow(object):
         self.label_244.setText(_translate("MainWindow", "1 Вых"))
         self.label_57.setText(_translate("MainWindow", "2 Вых"))
 
+# конструктор окна IP-settings
+class Ui_SettingsWindow(object):
+    def setupUi(self, SettingsWindow):
+        SettingsWindow.setObjectName("SettingsWindow")
+        SettingsWindow.resize(310, 250)
+        self.centralwidget = QtWidgets.QWidget(SettingsWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.SpushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.SpushButton.setGeometry(QtCore.QRect(40, 160, 101, 31))
+        self.SpushButton.setObjectName("SpushButton")
+        self.SpushButton_2 = QtWidgets.QPushButton(self.centralwidget)
+        self.SpushButton_2.setGeometry(QtCore.QRect(170, 160, 101, 31))
+        self.SpushButton_2.setObjectName("SpushButton_2")
+        self.Slabel = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel.setGeometry(QtCore.QRect(40, 25, 221, 21))
+        self.Slabel.setObjectName("Slabel")
+        self.Slabel_2 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_2.setGeometry(QtCore.QRect(40, 90, 221, 21))
+        self.Slabel_2.setObjectName("Slabel_2")
+        self.Slabel_3 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_3.setGeometry(QtCore.QRect(40, 180, 231, 61))
+        self.Slabel_3.setObjectName("Slabel_3")
+        self.Slabel_3.setAlignment(QtCore.Qt.AlignCenter)
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(12)
+        self.Slabel_3.setFont(font)
+        self.Slabel_3.hide()
+        self.SLineEdit = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit.setGeometry(QtCore.QRect(40, 50, 51, 31))
+        self.SLineEdit.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit.setMaxLength(3)
+        self.SLineEdit.setValidator(QIntValidator())
+        self.SL = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit.setFont(font)
+        self.SLineEdit.setObjectName("SLineEdit")
+        self.SLineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit_2.setGeometry(QtCore.QRect(100, 50, 51, 31))
+        self.SLineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit_2.setMaxLength(3)
+        self.SLineEdit_2.setValidator(QIntValidator())
+        self.SL_2 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit_2.setFont(font)
+        self.SLineEdit_2.setObjectName("SLineEdit_2")
+        self.SLineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit_3.setGeometry(QtCore.QRect(160, 50, 51, 31))
+        self.SLineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit_3.setMaxLength(3)
+        self.SLineEdit_3.setValidator(QIntValidator())
+        self.SL_3 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit_3.setFont(font)
+        self.SLineEdit_3.setObjectName("SLineEdit_3")
+        self.SLineEdit_4 = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit_4.setGeometry(QtCore.QRect(220, 50, 51, 31))
+        self.SLineEdit_4.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit_4.setMaxLength(3)
+        self.SLineEdit_4.setValidator(QIntValidator())
+        self.SL_4 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit_4.setFont(font)
+        self.SLineEdit_4.setObjectName("SLineEdit_4")
+        self.SLineEdit_5 = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit_5.setGeometry(QtCore.QRect(40, 110, 51, 31))
+        self.SLineEdit_5.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit_5.setMaxLength(3)
+        self.SLineEdit_5.setValidator(QIntValidator())
+        self.SL_5 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit_5.setFont(font)
+        self.SLineEdit_5.setObjectName("SLineEdit_5")
+        self.SLineEdit_6 = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit_6.setGeometry(QtCore.QRect(100, 110, 51, 31))
+        self.SLineEdit_6.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit_6.setMaxLength(3)
+        self.SLineEdit_6.setValidator(QIntValidator())
+        self.SL_6 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit_6.setFont(font)
+        self.SLineEdit_6.setObjectName("SLineEdit_6")
+        self.SLineEdit_7 = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit_7.setGeometry(QtCore.QRect(160, 110, 51, 31))
+        self.SLineEdit_7.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit_7.setMaxLength(3)
+        self.SLineEdit_7.setValidator(QIntValidator())
+        self.SL_7 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit_7.setFont(font)
+        self.SLineEdit_7.setObjectName("SLineEdit_7")
+        self.SLineEdit_8 = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit_8.setGeometry(QtCore.QRect(220, 110, 51, 31))
+        self.SLineEdit_8.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit_8.setMaxLength(3)
+        self.SLineEdit_8.setValidator(QIntValidator())
+        self.SL_8 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit_8.setFont(font)
+        self.SLineEdit_8.setObjectName("SLineEdit_8")
+        SettingsWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(SettingsWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 21))
+        self.menubar.setObjectName("menubar")
+        SettingsWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(SettingsWindow)
+        self.statusbar.setObjectName("statusbar")
+        SettingsWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(SettingsWindow)
+        QtCore.QMetaObject.connectSlotsByName(SettingsWindow)
+
+    def retranslateUi(self, SettingsWindow):
+        _translate = QtCore.QCoreApplication.translate
+        SettingsWindow.setWindowTitle(_translate("SettingsWindow", "IP Settings"))
+        self.SpushButton.setText(_translate("SettingsWindow", "Применить"))
+        self.SpushButton_2.setText(_translate("SettingsWindow", "Закрыть\nбез изменений"))
+        self.Slabel.setText(_translate("SettingsWindow", "Введите IP-адресс PV-4201:"))
+        self.Slabel_2.setText(_translate("SettingsWindow", "Введите IP-адресс PV-4202:"))
+        self.Slabel_3.setText(_translate("SettingsWindow", "Необходимо заполнить\nвсе поля IP-адреса!"))
+
 
 class mywindow(QtWidgets.QMainWindow):
 
@@ -4962,9 +5107,86 @@ class mywindow(QtWidgets.QMainWindow):
         super(mywindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.window = QtWidgets.QMainWindow()
+        self.uiS = Ui_SettingsWindow()
+        self.uiS.setupUi(self.window)
         self.ui.pushButton.clicked.connect(self.btnClicked)
         self.ui.pushButton_1.clicked.connect(self.btn_1Clicked)
+        self.ui.pushButton_2.clicked.connect(self.IP_btn)
+        self.uiS.SpushButton_2.clicked.connect(self.Quit)
+        self.uiS.SpushButton.clicked.connect(self.ChangeIP)
+        self.ui.text = 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
+        self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
+        self.ui.textEdit.setText(self.ui.text)
+        IP_4201 = self.ui.IP_4201.split('.')
+        IP_4202 = self.ui.IP_4202.split('.')
+        self.uiS.SLineEdit.setText(IP_4201[0])
+        self.uiS.SLineEdit_2.setText(IP_4201[1])
+        self.uiS.SLineEdit_3.setText(IP_4201[2])
+        self.uiS.SLineEdit_4.setText(IP_4201[3])
+        self.uiS.SLineEdit_5.setText(IP_4202[0])
+        self.uiS.SLineEdit_6.setText(IP_4202[1])
+        self.uiS.SLineEdit_7.setText(IP_4202[2])
+        self.uiS.SLineEdit_8.setText(IP_4202[3])
 
+    def Quit(self):
+        self.window.close()
+
+    # код работы кнопки "Применить"
+    def ChangeIP(self):
+
+        IP_var = [
+            self.uiS.SL,
+            self.uiS.SL_2,
+            self.uiS.SL_3,
+            self.uiS.SL_4,
+            self.uiS.SL_5,
+            self.uiS.SL_6,
+            self.uiS.SL_7,
+            self.uiS.SL_8]
+
+        IP_ins = [
+            self.uiS.SLineEdit.text(),
+            self.uiS.SLineEdit_2.text(),
+            self.uiS.SLineEdit_3.text(),
+            self.uiS.SLineEdit_4.text(),
+            self.uiS.SLineEdit_5.text(),
+            self.uiS.SLineEdit_6.text(),
+            self.uiS.SLineEdit_7.text(),
+            self.uiS.SLineEdit_8.text()]
+
+        IP_var[:]=IP_ins[:]
+
+        bool=True
+
+        # проверка на пустое значение в полях ввода
+        for i in IP_var:
+            if i == '':
+                self.uiS.Slabel_3.show()
+                bool=False
+            else:
+                pass
+
+
+        if bool == True:
+            IP_4201 = []
+            IP_4202 = []
+            for i in IP_var[:4]:
+                IP_4201.append(i)
+            for i in IP_var[4:]:
+                IP_4202.append(i)
+
+            self.ui.IP_4201 = '.'.join(IP_4201) # изменение значения переменной с IP-адресом
+            self.ui.IP_4202 = '.'.join(IP_4202)
+            self.ui.text = 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
+            self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
+            self.ui.textEdit.setText(self.ui.text)
+            QApplication.processEvents()
+            self.window.close()
+
+
+    def IP_btn(self):
+        self.window.show()
 
     """ Метод получения логов при ошибке """
 
@@ -4976,13 +5198,13 @@ class mywindow(QtWidgets.QMainWindow):
         print(text)
         quit()
 
+    sys.excepthook = log_uncaught_exceptions
 
     def btn_1Clicked(self):
         self.ui.text = 'Запрос ответа от PV-4201 и PV-4202...\n'
         self.ui.textEdit.setText(self.ui.text)
         self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.WaitCursor))
         QApplication.processEvents()
-
         # response_list_0 = ping(self.ui.IP_4201, size=40, count=10)  # PV-4201
         # response_list_1 = ping(self.ui.IP_4202, size=40, count=10)  # PV-4202
         #
@@ -4990,6 +5212,7 @@ class mywindow(QtWidgets.QMainWindow):
         #     self.ui.text = 'Подключение установлено.\n'
         #     self.ui.text += 'Нажмите кнопку Старт...\n'
         #     self.ui.pushButton.setEnabled(True)
+        #     self.ui.pushButton_2.setEnabled(False)
         #     self.ui.PING = True
         #
         # else:
@@ -5005,6 +5228,7 @@ class mywindow(QtWidgets.QMainWindow):
         #         self.ui.text += 'Проверьте подключение PV-4202!\n'
         #         self.ui.PING = False
         #     self.ui.pushButton.setEnabled(False)
+        #     self.ui.pushButton_2.setEnabled(True)
         # self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         # self.ui.textEdit.setText(self.ui.text)
 
@@ -5018,12 +5242,14 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.text = 'Подключение установлено.\n'
             self.ui.text += 'Нажмите кнопку Старт...\n'
             self.ui.pushButton.setEnabled(True)
+            self.ui.pushButton_2.setEnabled(False)
         else:
             time.sleep(5)
             self.ui.text = 'Ответа нет!\n'
             self.ui.text += 'Проверьте подключение PV-4201!\n'
             self.ui.text += 'Проверьте подключение PV-4202!\n'
             self.ui.pushButton.setEnabled(False)
+            self.ui.pushButton_2.setEnabled(True)
 
         self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.ui.textEdit.setText(self.ui.text)
@@ -5431,8 +5657,6 @@ class mywindow(QtWidgets.QMainWindow):
         else:
             print('Not connection')
 
-    import sys
-    sys.excepthook = log_uncaught_exceptions
 
 app = QtWidgets.QApplication([])
 application = mywindow()
@@ -5447,4 +5671,8 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
+    SettingsWindow = QtWidgets.QMainWindow()
+    uiS = Ui_SettingsWindow()
+    uiS.setupUi(SettingsWindow)
+    SettingsWindow.show()
     sys.exit(app.exec_())
