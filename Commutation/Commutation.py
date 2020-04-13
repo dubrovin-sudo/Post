@@ -9,9 +9,7 @@ import struct
 import pyautogui
 import operator
 import pandas as pd
-import datashader as ds
 from colorcet import fire
-import datashader.transfer_functions as tf
 import plotly.express as px
 from pythonping import ping
 from PyQt5 import QtCore, QtGui, QtWidgets
