@@ -11,6 +11,9 @@ import operator
 import pandas as pd
 from colorcet import fire
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+from numpy import arange
 from pythonping import ping
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QIntValidator
@@ -32,6 +35,12 @@ class Ui_MainWindow(object):
         self.IP_4202 = '192.168.10.101' # переменная для ip PV-4201
         self.PING = False # дефолтная boolean переменная для пинга
         self.text = ""  # дефолтная переменная для текстовых данных
+        self.D2 = []
+        self.D3 = []
+        self.D4 = []
+        self.D5 = []
+        self.plot ={'D2': self.D2, 'D3': self.D3, 'D4': self.D4, 'D5': self.D5} # инициализация словаря для хранения амплитуд кассет ЦОС
+
         self.icon = b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52\x00\x00\x00\x1e"\
       b"\x00\x00\x00\x1e\x08\x06\x00\x00\x00\x3b\x30\xae\xa2\x00\x00\x00\x01\x73\x52\x47"\
       b"\x42\x00\xae\xce\x1c\xe9\x00\x00\x00\x04\x67\x41\x4d\x41\x00\x00\xb1\x8f\x0b\xfc"\
@@ -5197,13 +5206,112 @@ class mywindow(QtWidgets.QMainWindow):
         self.uiS.SLineEdit_8.setText(IP_4202[3])
 
     def Noise_btn(self):
+        ang_d2_d4_c = (15, 75, 135, 195, 255, 315)
+        ang_d5_c = (45, 105, 165, 225, 285, 345)
+        ang_d2_d3_s = (15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345)
+        ang_d4_s = [x for x in arange(1.875, 360, 3.75) if not x // 30 % 2]
+        ang_d5_s = [x for x in arange(31.875, 360, 3.75) if x // 30 % 2]
+        fig = make_subplots(rows=2, cols=2, specs=[[{'type': 'polar'}] * 2] * 2)
+        fig.add_trace(go.Scatterpolar(
+          name='D2',
+          r=self.ui.plot['D2'][23:],
+          theta=ang_d2_d4_c,
+        ), 1, 1)
+        fig.add_trace(go.Scatterpolar(
+          name='D3',
+          r=self.ui.plot['D3'][23:],
+          theta=ang_d2_d4_c,
+        ), 1, 2)
+        fig.add_trace(go.Scatterpolar(
+          name='D4',
+          r=self.ui.plot['D4'][83:],
+          theta=ang_d2_d4_c,
+        ), 2, 1)
+        fig.add_trace(go.Scatterpolar(
+          name='D5',
+          r=self.ui.plot['D5'][83:],
+          theta=ang_d5_c,
+        ), 2, 2)
+        fig.add_trace(go.Scatterpolar(
+          name='D2',
+          visible=False,
+          r=self.ui.plot['D2'][:23:2],
+          theta=ang_d2_d3_s,
+        ), 1, 1)
+        fig.add_trace(go.Scatterpolar(
+          name='D3',
+          visible=False,
+          r=self.ui.plot['D3'][:23:2],
+          theta=ang_d2_d3_s,
+        ), 1, 2)
+        fig.add_trace(go.Scatterpolar(
+          name='D4',
+          r=self.ui.plot['D4'][:81:2] + self.ui.plot['D4'][82:84],
+          visible=False,
+          theta=ang_d4_s,
+        ), 2, 1)
+        fig.add_trace(go.Scatterpolar(
+          name='D5',
+          visible=False,
+          r=self.ui.plot['D5'][:81:2] + self.ui.plot['D5'][82:84],
+          theta=ang_d5_s,
+        ), 2, 2)
 
-        import plotly.express as px
-        df = px.data.wind()
-        fig = px.bar_polar(df, r="frequency", theta="direction",
-                           color="strength", template="plotly_dark",
-                           color_discrete_sequence=px.colors.sequential.Plasma_r)
+        fig.update_traces(fill='toself')
+        fig.update_layout(
+          polar1=dict(
+            angularaxis=dict(
+              direction="clockwise",
+              dtick=15)
+          ),
+          polar2=dict(
+            angularaxis=dict(
+              direction="clockwise",
+              dtick=15)
+          ),
+          polar3=dict(
+            angularaxis=dict(
+              direction="clockwise",
+              dtick=15)
+          ),
+          polar4=dict(
+            angularaxis=dict(
+              direction="clockwise",
+              dtick=15)
+          )
+        )
+
+        fig.layout.update(
+          updatemenus=[
+            go.layout.Updatemenu(
+              type="buttons", direction="right", active=0, x=0.1, y=1.2,
+              buttons=list(
+                [
+                  dict(
+                    label="Circle", method="update",
+                    args=[{"visible": [True, True, True, True, False, False, False, False]}]
+                  ),
+                  dict(
+                    label="Sector", method="update",
+                    args=[{"visible": [False, False, False, False, True, True, True, True]}]
+                  )
+                ]
+              )
+            )
+          ]
+        )
+
+        # Add annotation
+        fig.update_layout(
+          annotations=[
+            dict(text="Trace type:", showarrow=False,
+                 x=0, y=1.08, yref="paper", align="left")
+          ]
+        )
+
         fig.show()
+
+
 
     def Quit(self):
         self.window.close()
@@ -5700,9 +5808,11 @@ class mywindow(QtWidgets.QMainWindow):
                     # Эти данные надо применить для диаграмм
                     # запись массива максимальных амплитуд для каждого диапазона в словарь.
                     # Доступ к массиву амлпитуд диапазона по ключу band
-                    plot[band] = max_lst
+
+                    self.ui.plot[band] = max_lst
                     # вывод массив амплитуд
-                    print(plot[band])
+                    print(self.ui.plot[band])               
+
 
 
                     # поиск совпадений с эталонным массивом
