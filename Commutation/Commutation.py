@@ -8,6 +8,7 @@ import socket
 import struct
 import pyautogui
 import operator
+import statistics
 import pandas as pd
 from colorcet import fire
 import plotly.express as px
@@ -5780,7 +5781,7 @@ class mywindow(QtWidgets.QMainWindow):
                 # sock_send.sendto(bytes.fromhex(c_freq), (ip[band], 2000))
                 time.sleep(1)  # определить задержу в будущем
 
-                data = [random.randint(30, 40) for i in range(band_len[band])]
+                data = [random.randint(0, 10000) for i in range(band_len[band])]
                 # Прием ответа на запрос
                 while True:
                     # # формируем буфер
@@ -5802,34 +5803,48 @@ class mywindow(QtWidgets.QMainWindow):
                     del data[0:4]
                     # деление посылки на отрезки по 8 каналов
                     data = [data[i:i + 8] for i in range(0, len(data), 8)]
-                    # поиск максимальной амплитуды в кассетах ЦОС
-                    max_lst = [i.index(max(i)) + 1 for i in data]
+                    # поиск номера кассеты с максимальной амплитудой в блоке ЦОС
+                    max_lst_id = [i.index(max(i)) + 1 for i in data]
+                    # массив значений максимумов для каждого состояния (среди 8 кассет ЦОС)
+                    max_lst = [max(i) for i in data]
+                    # массив средне арифметических значений для каждого состояния (среди 8 кассет ЦОС)
+                    mean_lst = [statistics.mean(i) for i in data]
+                    # массив средне арифметических значений к максимальному для каждого состояния (среди 8 кассет ЦОС)
+                    comparison = [i for i in map(operator.truediv, max_lst, mean_lst)]
 
                     # Эти данные надо применить для диаграмм
                     # запись массива максимальных амплитуд для каждого диапазона в словарь.
                     # Доступ к массиву амлпитуд диапазона по ключу band
 
-                    self.ui.plot[band] = max_lst
+                    self.ui.plot[band] = max_lst_id
                     # вывод массив амплитуд
                     print(self.ui.plot[band])               
 
 
 
                     # поиск совпадений с эталонным массивом
-                    comparison = [
-                        i for i in map(
+                    """
+                    Число "к = max_lst/mean_lst" (разы) является порогом определения работоспособности МШУ. 
+                    Не рабочий усилитель в МШУ не будет вностить вклад в уровениь шумовой полки приемника.
+                    Значение порога необходимо определить в ходе тестирования.                    
+                    Его необходимо задавать из окна на лицевой панели, при этом пользователь должен задавать его в Дб
+                    Формула Дб = 10*lg(k) (к = 10^(дБ*0,1)) 
+                    """
+                    mshu_status = [None if k > 2 else i for i, k in zip(map(
                             operator.eq,
                             std[band],
-                            max_lst)]
-                    print(comparison)
-
+                            max_lst_id
+                    ), comparison)]
+                    print(mshu_status)
                     k = -1
-                    for i in comparison:
-                        time.sleep(0.1)  # определить задержку в будущем
+                    for i in mshu_status:
                         k += 1
-                        if i:
+                        if i == True:
                             color = "background-color: rgb(10, 150, 10);"
                             status = " connected\n"
+                        elif i == None:
+                            color = "background-color: rgb(232, 225, 16);"
+                            status = " possibly broken\n"
                         else:
                             color = "background-color: rgb(150, 10, 10);"
                             status = " not connected\n"
