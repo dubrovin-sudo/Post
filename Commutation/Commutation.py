@@ -22,7 +22,6 @@ from PyQt5.QtCore import QSize
 from PyQt5.QtWidgets import QWidget, QApplication
 
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -32,71 +31,76 @@ class Ui_MainWindow(object):
         self.centralwidget.setEnabled(True)
         self.centralwidget.setObjectName("centralwidget")
         """ Пользовательские глобальные переменные """
-        self.IP_4201 = '192.168.10.100' # переменная для ip PV-4201
-        self.IP_4202 = '192.168.10.101' # переменная для ip PV-4201
-        self.PING = False # дефолтная boolean переменная для пинга
+        self.IP_4201 = '192.168.10.100'  # переменная для ip PV-4201
+        self.IP_4202 = '192.168.10.101'  # переменная для ip PV-4201
+        self.PING = False  # дефолтная boolean переменная для пинга
         self.text = ""  # дефолтная переменная для текстовых данных
         self.D2 = []
         self.D3 = []
         self.D4 = []
         self.D5 = []
-        self.plot ={'D2': self.D2, 'D3': self.D3, 'D4': self.D4, 'D5': self.D5} # инициализация словаря для хранения амплитуд кассет ЦОС
+        # инициализация словаря для хранения амплитуд кассет ЦОС
+        self.plot = {
+            'D2': self.D2,
+            'D3': self.D3,
+            'D4': self.D4,
+            'D5': self.D5}
 
         self.icon = b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52\x00\x00\x00\x1e"\
-      b"\x00\x00\x00\x1e\x08\x06\x00\x00\x00\x3b\x30\xae\xa2\x00\x00\x00\x01\x73\x52\x47"\
-      b"\x42\x00\xae\xce\x1c\xe9\x00\x00\x00\x04\x67\x41\x4d\x41\x00\x00\xb1\x8f\x0b\xfc"\
-      b"\x61\x05\x00\x00\x00\x09\x70\x48\x59\x73\x00\x00\x0e\xc4\x00\x00\x0e\xc4\x01\x95"\
-      b"\x2b\x0e\x1b\x00\x00\x00\x41\x74\x45\x58\x74\x43\x6f\x6d\x6d\x65\x6e\x74\x00\x43"\
-      b"\x52\x45\x41\x54\x4f\x52\x3a\x20\x67\x64\x2d\x6a\x70\x65\x67\x20\x76\x31\x2e\x30"\
-      b"\x20\x28\x75\x73\x69\x6e\x67\x20\x49\x4a\x47\x20\x4a\x50\x45\x47\x20\x76\x36\x32"\
-      b"\x29\x2c\x20\x71\x75\x61\x6c\x69\x74\x79\x20\x3d\x20\x38\x35\x0a\xcc\xf0\xc6\xe1"\
-      b"\x00\x00\x03\x89\x49\x44\x41\x54\x48\x4b\x7d\x96\x4b\x4e\x2c\x31\x0c\x45\x0b\x9a"\
-      b"\xbf\x40\x02\x86\x2d\xc4\x9e\x40\xc0\x88\x55\x20\x3e\x62\x8a\x10\x30\xa1\xc7\xbd"\
-      b"\x0b\xf6\x81\xc4\x98\x7d\x80\xf8\x7f\xea\x71\x4c\x9f\xe0\xce\x2b\xb8\x52\x14\x97"\
-      b"\x63\x5f\xdf\x38\xa9\xea\x6e\xda\x2f\x7c\x7e\x7e\xb6\x6f\x6f\x6f\x98\x61\xbf\xbf"\
-      b"\xbf\x87\x2d\x78\xfe\xf8\xf8\x18\x3d\xb5\x61\x13\xa7\xef\xf5\xf5\x35\xe6\x1c\xc7"\
-      b"\x3a\x03\xc0\x9d\xe3\x89\x8b\xc2\x02\x47\x2e\x9a\x8b\xd5\x90\x14\x40\x9c\xf3\x58"\
-      b"\xcb\x22\x32\x14\xd4\xb8\xd3\x1a\x99\x38\xdb\x90\x5d\x5c\x5c\xb4\x47\x47\x47\xed"\
-      b"\xc1\xc1\x41\x7b\x79\x79\x19\x7e\x62\x5e\x5e\x5e\xc2\x06\x5d\x42\x04\x1d\x8a\x1d"\
-      b"\xe7\xe2\x06\x18\xdc\xa5\xba\xd7\xeb\xb5\x4d\xd3\xb4\x93\x93\x93\x31\x1e\x1e\x1e"\
-      b"\x46\x2b\xdf\xc8\x45\x32\x9e\x9f\x9f\x0b\x5f\xe3\xf9\x64\xe4\x1d\x82\x3a\x66\x62"\
-      b"\x62\xa2\x10\x60\x0b\xf2\xf0\x9b\x9f\x45\xe7\x0d\x81\x72\xc6\x59\x25\x09\x77\x77"\
-      b"\x77\xb1\xb3\x8d\x8d\x8d\x91\xf7\x1b\xec\x70\x6d\x6d\x2d\x6c\x72\x96\x97\x97\x63"\
-      b"\xf7\xe4\xc8\xb1\xb3\xb3\xd3\xce\xcc\xcc\x94\xae\xd5\x20\x36\x0a\x67\x35\xee\x0e"\
-      b"\x32\xc6\xd4\xd4\x54\xb1\xe7\xe7\xe7\x63\x56\xb5\x58\x5c\x5c\x2c\x6d\x67\xdd\x79"\
-      b"\x6e\x6e\x2e\xd6\xe1\x37\xc7\x63\x6d\x6c\x87\x33\x01\xb3\xb3\xb3\x91\x08\xf2\x85"\
-      b"\xc9\x2d\xcf\x3b\x21\xa7\xe6\x01\x70\xd0\x35\x5f\x27\x8b\x33\x37\x99\xc0\xa4\xdd"\
-      b"\xdd\xdd\x50\xcd\xb3\xc1\x20\xdb\xb9\x4b\xbf\x81\xc2\x1e\x55\x16\x84\x1d\xdb\x22"\
-      b"\x59\x02\x09\x51\xaa\x9d\xc5\xa1\xfe\xe9\xe9\x29\x6e\x68\xee\x86\xc4\x8a\x65\x20"\
-      b"\x1e\xe4\x4e\x19\x57\x2e\x97\x85\x99\x21\x47\x6d\xbe\xfe\xf8\x21\xc0\xcf\xe0\xf2"\
-      b"\x30\x73\xab\x39\xfb\x1a\x88\xcd\x37\x5e\x1e\x31\xf6\x3a\xe5\xf7\x19\x52\xc1\x0e"\
-      b"\x59\xa3\x0b\x0c\x44\x48\x44\x81\x9b\x9b\x9b\x28\xa2\x50\x7c\xc4\x10\x0b\x3f\x36"\
-      b"\x03\x98\x1b\xec\x8f\x8f\x8f\xe1\x94\x0c\x12\x0a\x67\x21\xfa\x6c\x7b\xdd\xbe\xdb"\
-      b"\xdb\xdb\x31\xb1\x0a\xf5\xae\x64\x2e\x50\x22\xcf\xce\xce\x22\x91\xd1\xef\xf7\x47"\
-      b"\xde\x1f\x31\xbc\x56\x40\xe5\x00\x1b\x42\x7d\xe4\xde\xdf\xdf\x87\x0d\xf0\xaf\xae"\
-      b"\xae\x86\x1f\xe1\xe7\xe7\xe7\xe1\x47\x7c\xb9\xd5\xfb\xfb\xfb\xa1\x50\x65\xf8\x2d"\
-      b"\xba\xb7\xb7\x17\xc9\xae\xe9\x37\x57\x5c\x5d\x5d\x95\x0b\xa5\x18\x67\xb8\x0f\x0f"\
-      b"\x0f\xc3\xc6\x17\x3b\xc6\x38\x3e\x3e\x0e\x72\x21\x29\x6b\x74\x40\x42\x20\x19\xc8"\
-      b"\x36\xb7\xdc\xb8\xff\x5a\xfb\xc5\xcd\x0f\x8b\x88\x4a\xec\x60\x38\x1c\x46\x3b\x18"\
-      b"\xeb\xeb\xeb\xb1\x28\x20\xf7\x52\x81\x2c\x0a\x58\x04\xf2\xa5\xa5\xa5\xf0\xdb\x95"\
-      b"\x95\x95\x95\xe0\x9c\x9e\x9e\x6e\x4f\x4f\x4f\xc3\x07\x4a\xab\x09\x46\x31\x97\x86"\
-      b"\xf3\xcc\x85\x00\xc9\x3e\x43\x9a\xd7\x00\x37\xba\xce\xe1\x93\x69\x9e\x42\x00\x76"\
-      b"\xe9\x6d\xbe\xa5\x80\x04\xc1\x8e\x10\x05\x51\x4d\x20\x88\xa7\xb0\x3c\xb6\x9d\xa2"\
-      b"\x99\xdb\x8f\x4e\x93\x15\x4a\xc4\x22\x6d\xb3\x1b\xfa\xaf\xaf\xaf\x83\xcc\xbb\x10"\
-      b"\xca\xbf\x6c\x46\xbe\x03\xc0\x35\x91\xeb\x60\xc7\x4a\x56\x64\x80\xaf\x4f\x16\x03"\
-      b"\x22\x69\x54\x8c\x5d\xfa\xd5\xc2\x8f\x50\xe2\xb1\x19\x70\xf0\xec\x1d\xc8\xdd\x88"\
-      b"\xc2\x16\x13\x9b\x9b\x9b\x91\x44\x40\xbd\xd6\x05\x88\xed\x4e\x06\xe2\xf8\x6d\x56"\
-      b"\x3c\xd0\x2e\xbd\xc0\x41\x32\x85\x38\xab\xdc\x26\x80\x08\x0a\xb8\x1b\x61\x41\x2e"\
-      b"\x17\x3b\xe2\xf3\x2a\x10\x0f\x0f\xfe\xdc\x09\x46\xb0\xff\xa6\x96\x44\xda\x89\xcd"\
-      b"\x19\x62\xe3\xb3\xb0\xf3\xc2\xc2\xc2\x58\xbc\xf7\x00\x1b\x41\xa0\xde\x75\x14\xf6"\
-      b"\x0c\x80\x64\x80\xc4\xad\xad\xad\xd1\xd3\x37\xf0\x51\x48\xf8\xaf\x44\x40\xba\xbd"\
-      b"\xbd\x1d\xbe\xcc\x5b\xa3\xfc\x03\x01\x79\xe7\xf8\x79\x76\x06\x5e\x30\xfe\xa1\x98"\
-      b"\xe7\xbb\x4b\x8c\x47\x01\x32\x6f\x17\xc6\xce\x38\xcf\x40\x3b\x77\x81\xf3\x62\x37"\
-      b"\x79\xb8\xb3\xcc\xd1\x75\x7c\x19\xf1\x1e\xd7\x05\x98\xff\x52\x7e\x72\x72\x12\x1f"\
-      b"\x7c\xbe\xbd\x83\xc1\x20\x7c\xc6\xe5\x82\x59\x70\x8d\xb1\x0f\x08\xb6\xed\xec\x2a"\
-      b"\xc8\xba\x7e\x66\x46\x7d\x0c\xa0\x2b\xb7\x46\x69\xb5\xb7\x0f\x90\x58\x0b\x02\xb5"\
-      b"\xbf\x0b\xb6\xfd\xef\x56\xb7\xed\x3f\x08\x56\x3b\x83\x25\x50\xf3\x50\x00\x00\x00"\
-      b"\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
+            b"\x00\x00\x00\x1e\x08\x06\x00\x00\x00\x3b\x30\xae\xa2\x00\x00\x00\x01\x73\x52\x47"\
+            b"\x42\x00\xae\xce\x1c\xe9\x00\x00\x00\x04\x67\x41\x4d\x41\x00\x00\xb1\x8f\x0b\xfc"\
+            b"\x61\x05\x00\x00\x00\x09\x70\x48\x59\x73\x00\x00\x0e\xc4\x00\x00\x0e\xc4\x01\x95"\
+            b"\x2b\x0e\x1b\x00\x00\x00\x41\x74\x45\x58\x74\x43\x6f\x6d\x6d\x65\x6e\x74\x00\x43"\
+            b"\x52\x45\x41\x54\x4f\x52\x3a\x20\x67\x64\x2d\x6a\x70\x65\x67\x20\x76\x31\x2e\x30"\
+            b"\x20\x28\x75\x73\x69\x6e\x67\x20\x49\x4a\x47\x20\x4a\x50\x45\x47\x20\x76\x36\x32"\
+            b"\x29\x2c\x20\x71\x75\x61\x6c\x69\x74\x79\x20\x3d\x20\x38\x35\x0a\xcc\xf0\xc6\xe1"\
+            b"\x00\x00\x03\x89\x49\x44\x41\x54\x48\x4b\x7d\x96\x4b\x4e\x2c\x31\x0c\x45\x0b\x9a"\
+            b"\xbf\x40\x02\x86\x2d\xc4\x9e\x40\xc0\x88\x55\x20\x3e\x62\x8a\x10\x30\xa1\xc7\xbd"\
+            b"\x0b\xf6\x81\xc4\x98\x7d\x80\xf8\x7f\xea\x71\x4c\x9f\xe0\xce\x2b\xb8\x52\x14\x97"\
+            b"\x63\x5f\xdf\x38\xa9\xea\x6e\xda\x2f\x7c\x7e\x7e\xb6\x6f\x6f\x6f\x98\x61\xbf\xbf"\
+            b"\xbf\x87\x2d\x78\xfe\xf8\xf8\x18\x3d\xb5\x61\x13\xa7\xef\xf5\xf5\x35\xe6\x1c\xc7"\
+            b"\x3a\x03\xc0\x9d\xe3\x89\x8b\xc2\x02\x47\x2e\x9a\x8b\xd5\x90\x14\x40\x9c\xf3\x58"\
+            b"\xcb\x22\x32\x14\xd4\xb8\xd3\x1a\x99\x38\xdb\x90\x5d\x5c\x5c\xb4\x47\x47\x47\xed"\
+            b"\xc1\xc1\x41\x7b\x79\x79\x19\x7e\x62\x5e\x5e\x5e\xc2\x06\x5d\x42\x04\x1d\x8a\x1d"\
+            b"\xe7\xe2\x06\x18\xdc\xa5\xba\xd7\xeb\xb5\x4d\xd3\xb4\x93\x93\x93\x31\x1e\x1e\x1e"\
+            b"\x46\x2b\xdf\xc8\x45\x32\x9e\x9f\x9f\x0b\x5f\xe3\xf9\x64\xe4\x1d\x82\x3a\x66\x62"\
+            b"\x62\xa2\x10\x60\x0b\xf2\xf0\x9b\x9f\x45\xe7\x0d\x81\x72\xc6\x59\x25\x09\x77\x77"\
+            b"\x77\xb1\xb3\x8d\x8d\x8d\x91\xf7\x1b\xec\x70\x6d\x6d\x2d\x6c\x72\x96\x97\x97\x63"\
+            b"\xf7\xe4\xc8\xb1\xb3\xb3\xd3\xce\xcc\xcc\x94\xae\xd5\x20\x36\x0a\x67\x35\xee\x0e"\
+            b"\x32\xc6\xd4\xd4\x54\xb1\xe7\xe7\xe7\x63\x56\xb5\x58\x5c\x5c\x2c\x6d\x67\xdd\x79"\
+            b"\x6e\x6e\x2e\xd6\xe1\x37\xc7\x63\x6d\x6c\x87\x33\x01\xb3\xb3\xb3\x91\x08\xf2\x85"\
+            b"\xc9\x2d\xcf\x3b\x21\xa7\xe6\x01\x70\xd0\x35\x5f\x27\x8b\x33\x37\x99\xc0\xa4\xdd"\
+            b"\xdd\xdd\x50\xcd\xb3\xc1\x20\xdb\xb9\x4b\xbf\x81\xc2\x1e\x55\x16\x84\x1d\xdb\x22"\
+            b"\x59\x02\x09\x51\xaa\x9d\xc5\xa1\xfe\xe9\xe9\x29\x6e\x68\xee\x86\xc4\x8a\x65\x20"\
+            b"\x1e\xe4\x4e\x19\x57\x2e\x97\x85\x99\x21\x47\x6d\xbe\xfe\xf8\x21\xc0\xcf\xe0\xf2"\
+            b"\x30\x73\xab\x39\xfb\x1a\x88\xcd\x37\x5e\x1e\x31\xf6\x3a\xe5\xf7\x19\x52\xc1\x0e"\
+            b"\x59\xa3\x0b\x0c\x44\x48\x44\x81\x9b\x9b\x9b\x28\xa2\x50\x7c\xc4\x10\x0b\x3f\x36"\
+            b"\x03\x98\x1b\xec\x8f\x8f\x8f\xe1\x94\x0c\x12\x0a\x67\x21\xfa\x6c\x7b\xdd\xbe\xdb"\
+            b"\xdb\xdb\x31\xb1\x0a\xf5\xae\x64\x2e\x50\x22\xcf\xce\xce\x22\x91\xd1\xef\xf7\x47"\
+            b"\xde\x1f\x31\xbc\x56\x40\xe5\x00\x1b\x42\x7d\xe4\xde\xdf\xdf\x87\x0d\xf0\xaf\xae"\
+            b"\xae\x86\x1f\xe1\xe7\xe7\xe7\xe1\x47\x7c\xb9\xd5\xfb\xfb\xfb\xa1\x50\x65\xf8\x2d"\
+            b"\xba\xb7\xb7\x17\xc9\xae\xe9\x37\x57\x5c\x5d\x5d\x95\x0b\xa5\x18\x67\xb8\x0f\x0f"\
+            b"\x0f\xc3\xc6\x17\x3b\xc6\x38\x3e\x3e\x0e\x72\x21\x29\x6b\x74\x40\x42\x20\x19\xc8"\
+            b"\x36\xb7\xdc\xb8\xff\x5a\xfb\xc5\xcd\x0f\x8b\x88\x4a\xec\x60\x38\x1c\x46\x3b\x18"\
+            b"\xeb\xeb\xeb\xb1\x28\x20\xf7\x52\x81\x2c\x0a\x58\x04\xf2\xa5\xa5\xa5\xf0\xdb\x95"\
+            b"\x95\x95\x95\xe0\x9c\x9e\x9e\x6e\x4f\x4f\x4f\xc3\x07\x4a\xab\x09\x46\x31\x97\x86"\
+            b"\xf3\xcc\x85\x00\xc9\x3e\x43\x9a\xd7\x00\x37\xba\xce\xe1\x93\x69\x9e\x42\x00\x76"\
+            b"\xe9\x6d\xbe\xa5\x80\x04\xc1\x8e\x10\x05\x51\x4d\x20\x88\xa7\xb0\x3c\xb6\x9d\xa2"\
+            b"\x99\xdb\x8f\x4e\x93\x15\x4a\xc4\x22\x6d\xb3\x1b\xfa\xaf\xaf\xaf\x83\xcc\xbb\x10"\
+            b"\xca\xbf\x6c\x46\xbe\x03\xc0\x35\x91\xeb\x60\xc7\x4a\x56\x64\x80\xaf\x4f\x16\x03"\
+            b"\x22\x69\x54\x8c\x5d\xfa\xd5\xc2\x8f\x50\xe2\xb1\x19\x70\xf0\xec\x1d\xc8\xdd\x88"\
+            b"\xc2\x16\x13\x9b\x9b\x9b\x91\x44\x40\xbd\xd6\x05\x88\xed\x4e\x06\xe2\xf8\x6d\x56"\
+            b"\x3c\xd0\x2e\xbd\xc0\x41\x32\x85\x38\xab\xdc\x26\x80\x08\x0a\xb8\x1b\x61\x41\x2e"\
+            b"\x17\x3b\xe2\xf3\x2a\x10\x0f\x0f\xfe\xdc\x09\x46\xb0\xff\xa6\x96\x44\xda\x89\xcd"\
+            b"\x19\x62\xe3\xb3\xb0\xf3\xc2\xc2\xc2\x58\xbc\xf7\x00\x1b\x41\xa0\xde\x75\x14\xf6"\
+            b"\x0c\x80\x64\x80\xc4\xad\xad\xad\xd1\xd3\x37\xf0\x51\x48\xf8\xaf\x44\x40\xba\xbd"\
+            b"\xbd\x1d\xbe\xcc\x5b\xa3\xfc\x03\x01\x79\xe7\xf8\x79\x76\x06\x5e\x30\xfe\xa1\x98"\
+            b"\xe7\xbb\x4b\x8c\x47\x01\x32\x6f\x17\xc6\xce\x38\xcf\x40\x3b\x77\x81\xf3\x62\x37"\
+            b"\x79\xb8\xb3\xcc\xd1\x75\x7c\x19\xf1\x1e\xd7\x05\x98\xff\x52\x7e\x72\x72\x12\x1f"\
+            b"\x7c\xbe\xbd\x83\xc1\x20\x7c\xc6\xe5\x82\x59\x70\x8d\xb1\x0f\x08\xb6\xed\xec\x2a"\
+            b"\xc8\xba\x7e\x66\x46\x7d\x0c\xa0\x2b\xb7\x46\x69\xb5\xb7\x0f\x90\x58\x0b\x02\xb5"\
+            b"\xbf\x0b\xb6\xfd\xef\x56\xb7\xed\x3f\x08\x56\x3b\x83\x25\x50\xf3\x50\x00\x00\x00"\
+            b"\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
         """                                        """
         self.gbA_1 = QtWidgets.QGroupBox(self.centralwidget)
         self.gbA_1.setGeometry(QtCore.QRect(100, 170, 71, 101))
@@ -4681,7 +4685,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Проверка коммутации МШУ в станции ПОСТ-3М"))
+        MainWindow.setWindowTitle(
+            _translate(
+                "MainWindow",
+                "Проверка коммутации МШУ в станции ПОСТ-3М"))
         self.gbA_1.setTitle(_translate("MainWindow", "1 сектор"))
         self.label_5.setText(_translate("MainWindow", "1 Вых"))
         self.label_6.setText(_translate("MainWindow", "2 Вых"))
@@ -5017,7 +5024,10 @@ class Ui_MainWindow(object):
         self.gbA_14.setTitle(_translate("MainWindow", "10 сект"))
         self.label_245.setText(_translate("MainWindow", "1 Вых"))
         self.pushButton.setText(_translate("MainWindow", "Старт"))
-        self.pushButton_1.setText(_translate("MainWindow", "Проверить подключение"))
+        self.pushButton_1.setText(
+            _translate(
+                "MainWindow",
+                "Проверить подключение"))
         self.pushButton_2.setText(_translate("MainWindow", ""))
         self.pushButton_3.setText(_translate("MainWindow", "Magic Noise"))
         self.gbA_19.setTitle(_translate("MainWindow", "11 сект"))
@@ -5040,6 +5050,8 @@ class Ui_MainWindow(object):
         self.label_57.setText(_translate("MainWindow", "2 Вых"))
 
 # конструктор окна IP-settings
+
+
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         SettingsWindow.setObjectName("SettingsWindow")
@@ -5169,12 +5181,25 @@ class Ui_SettingsWindow(object):
 
     def retranslateUi(self, SettingsWindow):
         _translate = QtCore.QCoreApplication.translate
-        SettingsWindow.setWindowTitle(_translate("SettingsWindow", "IP Settings"))
+        SettingsWindow.setWindowTitle(
+            _translate("SettingsWindow", "IP Settings"))
         self.SpushButton.setText(_translate("SettingsWindow", "Применить"))
-        self.SpushButton_2.setText(_translate("SettingsWindow", "Закрыть\nбез изменений"))
-        self.Slabel.setText(_translate("SettingsWindow", "Введите IP-адресс PV-4201:"))
-        self.Slabel_2.setText(_translate("SettingsWindow", "Введите IP-адресс PV-4202:"))
-        self.Slabel_3.setText(_translate("SettingsWindow", "Необходимо заполнить\nвсе поля IP-адреса!"))
+        self.SpushButton_2.setText(
+            _translate(
+                "SettingsWindow",
+                "Закрыть\nбез изменений"))
+        self.Slabel.setText(
+            _translate(
+                "SettingsWindow",
+                "Введите IP-адресс PV-4201:"))
+        self.Slabel_2.setText(
+            _translate(
+                "SettingsWindow",
+                "Введите IP-адресс PV-4202:"))
+        self.Slabel_3.setText(
+            _translate(
+                "SettingsWindow",
+                "Необходимо заполнить\nвсе поля IP-адреса!"))
 
 
 class mywindow(QtWidgets.QMainWindow):
@@ -5212,107 +5237,106 @@ class mywindow(QtWidgets.QMainWindow):
         ang_d2_d3_s = (15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345)
         ang_d4_s = [x for x in arange(1.875, 360, 3.75) if not x // 30 % 2]
         ang_d5_s = [x for x in arange(31.875, 360, 3.75) if x // 30 % 2]
-        fig = make_subplots(rows=2, cols=2, specs=[[{'type': 'polar'}] * 2] * 2)
+        fig = make_subplots(rows=2, cols=2, specs=[
+                            [{'type': 'polar'}] * 2] * 2)
         fig.add_trace(go.Scatterpolar(
-          name='D2',
-          r=self.ui.plot['D2'][23:],
-          theta=ang_d2_d4_c,
+            name='D2',
+            r=self.ui.plot['D2'][23:],
+            theta=ang_d2_d4_c,
         ), 1, 1)
         fig.add_trace(go.Scatterpolar(
-          name='D3',
-          r=self.ui.plot['D3'][23:],
-          theta=ang_d2_d4_c,
+            name='D3',
+            r=self.ui.plot['D3'][23:],
+            theta=ang_d2_d4_c,
         ), 1, 2)
         fig.add_trace(go.Scatterpolar(
-          name='D4',
-          r=self.ui.plot['D4'][83:],
-          theta=ang_d2_d4_c,
+            name='D4',
+            r=self.ui.plot['D4'][83:],
+            theta=ang_d2_d4_c,
         ), 2, 1)
         fig.add_trace(go.Scatterpolar(
-          name='D5',
-          r=self.ui.plot['D5'][83:],
-          theta=ang_d5_c,
+            name='D5',
+            r=self.ui.plot['D5'][83:],
+            theta=ang_d5_c,
         ), 2, 2)
         fig.add_trace(go.Scatterpolar(
-          name='D2',
-          visible=False,
-          r=self.ui.plot['D2'][:23:2],
-          theta=ang_d2_d3_s,
+            name='D2',
+            visible=False,
+            r=self.ui.plot['D2'][:23:2],
+            theta=ang_d2_d3_s,
         ), 1, 1)
         fig.add_trace(go.Scatterpolar(
-          name='D3',
-          visible=False,
-          r=self.ui.plot['D3'][:23:2],
-          theta=ang_d2_d3_s,
+            name='D3',
+            visible=False,
+            r=self.ui.plot['D3'][:23:2],
+            theta=ang_d2_d3_s,
         ), 1, 2)
         fig.add_trace(go.Scatterpolar(
-          name='D4',
-          r=self.ui.plot['D4'][:81:2] + self.ui.plot['D4'][82:84],
-          visible=False,
-          theta=ang_d4_s,
+            name='D4',
+            r=self.ui.plot['D4'][:81:2] + self.ui.plot['D4'][82:84],
+            visible=False,
+            theta=ang_d4_s,
         ), 2, 1)
         fig.add_trace(go.Scatterpolar(
-          name='D5',
-          visible=False,
-          r=self.ui.plot['D5'][:81:2] + self.ui.plot['D5'][82:84],
-          theta=ang_d5_s,
+            name='D5',
+            visible=False,
+            r=self.ui.plot['D5'][:81:2] + self.ui.plot['D5'][82:84],
+            theta=ang_d5_s,
         ), 2, 2)
 
         fig.update_traces(fill='toself')
         fig.update_layout(
-          polar1=dict(
-            angularaxis=dict(
-              direction="clockwise",
-              dtick=15)
-          ),
-          polar2=dict(
-            angularaxis=dict(
-              direction="clockwise",
-              dtick=15)
-          ),
-          polar3=dict(
-            angularaxis=dict(
-              direction="clockwise",
-              dtick=15)
-          ),
-          polar4=dict(
-            angularaxis=dict(
-              direction="clockwise",
-              dtick=15)
-          )
+            polar1=dict(
+                angularaxis=dict(
+                    direction="clockwise",
+                    dtick=15)
+            ),
+            polar2=dict(
+                angularaxis=dict(
+                    direction="clockwise",
+                    dtick=15)
+            ),
+            polar3=dict(
+                angularaxis=dict(
+                    direction="clockwise",
+                    dtick=15)
+            ),
+            polar4=dict(
+                angularaxis=dict(
+                    direction="clockwise",
+                    dtick=15)
+            )
         )
 
         fig.layout.update(
-          updatemenus=[
-            go.layout.Updatemenu(
-              type="buttons", direction="right", active=0, x=0.1, y=1.2,
-              buttons=list(
-                [
-                  dict(
-                    label="Circle", method="update",
-                    args=[{"visible": [True, True, True, True, False, False, False, False]}]
-                  ),
-                  dict(
-                    label="Sector", method="update",
-                    args=[{"visible": [False, False, False, False, True, True, True, True]}]
-                  )
-                ]
-              )
-            )
-          ]
+            updatemenus=[
+                go.layout.Updatemenu(
+                    type="buttons", direction="right", active=0, x=0.1, y=1.2,
+                    buttons=list(
+                        [
+                            dict(
+                                label="Circle", method="update",
+                                args=[{"visible": [True, True, True, True, False, False, False, False]}]
+                            ),
+                            dict(
+                                label="Sector", method="update",
+                                args=[{"visible": [False, False, False, False, True, True, True, True]}]
+                            )
+                        ]
+                    )
+                )
+            ]
         )
 
         # Add annotation
         fig.update_layout(
-          annotations=[
-            dict(text="Trace type:", showarrow=False,
-                 x=0, y=1.08, yref="paper", align="left")
-          ]
+            annotations=[
+                dict(text="Trace type:", showarrow=False,
+                     x=0, y=1.08, yref="paper", align="left")
+            ]
         )
 
         fig.show()
-
-
 
     def Quit(self):
         self.window.close()
@@ -5340,20 +5364,19 @@ class mywindow(QtWidgets.QMainWindow):
             self.uiS.SLineEdit_7.text(),
             self.uiS.SLineEdit_8.text()]
 
-        IP_var[:]=IP_ins[:]
+        IP_var[:] = IP_ins[:]
 
-        bool=True
+        bool = True
 
         # проверка на пустое значение в полях ввода
         for i in IP_var:
             if i == '':
                 self.uiS.Slabel_3.show()
-                bool=False
+                bool = False
             else:
                 pass
 
-
-        if bool == True:
+        if bool:
             IP_4201 = []
             IP_4202 = []
             for i in IP_var[:4]:
@@ -5361,14 +5384,14 @@ class mywindow(QtWidgets.QMainWindow):
             for i in IP_var[4:]:
                 IP_4202.append(i)
 
-            self.ui.IP_4201 = '.'.join(IP_4201) # изменение значения переменной с IP-адресом
+            # изменение значения переменной с IP-адресом
+            self.ui.IP_4201 = '.'.join(IP_4201)
             self.ui.IP_4202 = '.'.join(IP_4202)
             self.ui.text = 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
             self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
             self.ui.textEdit.setText(self.ui.text)
             QApplication.processEvents()
             self.window.close()
-
 
     def IP_btn(self):
         self.window.show()
@@ -5417,13 +5440,12 @@ class mywindow(QtWidgets.QMainWindow):
         # self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         # self.ui.textEdit.setText(self.ui.text)
 
-
         """
         Код выше раскомментить. Код ниже для имитации работы кнопки "Проверка подключения" (подлежит удалению).
         """
-        self.ui.PING = True # изменить значение переменной для наличия/отсутствия подключения при имитации
+        self.ui.PING = True  # изменить значение переменной для наличия/отсутствия подключения при имитации
 
-        if self.ui.PING == True:
+        if self.ui.PING:
             self.ui.text = 'Подключение установлено.\n'
             self.ui.text += 'Нажмите кнопку Старт...\n'
             self.ui.pushButton.setEnabled(True)
@@ -5439,15 +5461,12 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.centralwidget.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.ui.textEdit.setText(self.ui.text)
 
-
     def btnClicked(self):
-
 
         self.ui.pushButton.setEnabled(False)
         self.ui.pushButton_1.setEnabled(False)
 
-
-        d2 = [
+        d2 = (
             self.ui.d2_1_1,
             self.ui.d2_1_2,
             self.ui.d2_2_1,
@@ -5477,8 +5496,8 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.d24_5_1,
             self.ui.d24_7_1,
             self.ui.d24_9_1,
-            self.ui.d24_11_1]
-        d3 = [
+            self.ui.d24_11_1)
+        d3 = (
             self.ui.d3_1_1,
             self.ui.d3_1_2,
             self.ui.d3_2_1,
@@ -5508,8 +5527,8 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.d24_5_1,
             self.ui.d24_7_1,
             self.ui.d24_9_1,
-            self.ui.d24_11_1]
-        d4 = [
+            self.ui.d24_11_1)
+        d4 = (
             self.ui.d4_1_1_1,
             self.ui.d4_1_1_2,
             self.ui.d4_1_2_1,
@@ -5599,8 +5618,8 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.d24_5_2,
             self.ui.d24_7_2,
             self.ui.d24_9_2,
-            self.ui.d24_11_2]
-        d5 = [
+            self.ui.d24_11_2)
+        d5 = (
             self.ui.d5_2_1_1,
             self.ui.d5_2_1_2,
             self.ui.d5_2_2_1,
@@ -5690,7 +5709,7 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.d5o_6_1,
             self.ui.d5o_8_1,
             self.ui.d5o_10_1,
-            self.ui.d5o_12_1]
+            self.ui.d5o_12_1)
 
         # Эталонные значение № кассет ЦОС
         std_d2 = (4, 1, 8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 4, 1,
@@ -5708,9 +5727,7 @@ class mywindow(QtWidgets.QMainWindow):
                   1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
                   1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2, 3, 5, 7, 8, 6, 4)
 
-
         if self.ui.PING:
-
 
             # Команда 0х80 для перевода блока ЦОС в режим паузы
             c_pause = '2e:00:80:00:00:00:00:14:00:00:00:00:00:00:00:00:38:00:00:00:' \
@@ -5759,13 +5776,21 @@ class mywindow(QtWidgets.QMainWindow):
             # длина поссылки
             band_len = {'D2': 244, 'D3': 244, 'D4': 724, 'D5': 724}
             # ip адрес
-            ip = {'D2': self.ui.IP_4201, 'D3': self.ui.IP_4201, 'D4': self.ui.IP_4201, 'D5': self.ui.IP_4202}
+            ip = {
+                'D2': self.ui.IP_4201,
+                'D3': self.ui.IP_4201,
+                'D4': self.ui.IP_4201,
+                'D5': self.ui.IP_4202}
             # код частоты
             freq = {'D2': '00', 'D3': '08', 'D4': '18', 'D5': '00'}
             # эталонный массив № кассет ЦОС
             std = {'D2': std_d2, 'D3': std_d2, 'D4': std_d4, 'D5': std_d5}
             # текст для бегущей строки
-            band_rus = {'D2': 'Д2 - ', 'D3': 'Д3 - ', 'D4': 'Д4 - ', 'D5': 'Д5 - '}
+            band_rus = {
+                'D2': 'Д2 - ',
+                'D3': 'Д3 - ',
+                'D4': 'Д4 - ',
+                'D5': 'Д5 - '}
             # инициализация словаря для хранения амплитуд кассет ЦОС
             plot = {}
 
@@ -5779,9 +5804,13 @@ class mywindow(QtWidgets.QMainWindow):
                 # sock_send.bind(('', 2000))
                 # # Отправка отладочного пакета управления РПУ 0х8А с установленной частотой freq[band] ГГц на адрес ip[band]
                 # sock_send.sendto(bytes.fromhex(c_freq), (ip[band], 2000))
-                time.sleep(1)  # определить задержу в будущем
+                time.sleep(0.2)  # определить задержу в будущем
 
-                data = [random.randint(0, 10000) for i in range(band_len[band])]
+                data = [
+                    random.randint(
+                        0,
+                        10000) for i in range(
+                        band_len[band])]
                 # Прием ответа на запрос
                 while True:
                     # # формируем буфер
@@ -5803,14 +5832,24 @@ class mywindow(QtWidgets.QMainWindow):
                     del data[0:4]
                     # деление посылки на отрезки по 8 каналов
                     data = [data[i:i + 8] for i in range(0, len(data), 8)]
-                    # поиск номера кассеты с максимальной амплитудой в блоке ЦОС
+                    # поиск номера кассеты с максимальной амплитудой в блоке
+                    # ЦОС
                     max_lst_id = [i.index(max(i)) + 1 for i in data]
-                    # массив значений максимумов для каждого состояния (среди 8 кассет ЦОС)
-                    max_lst = [max(i) for i in data]
-                    # массив средне арифметических значений для каждого состояния (среди 8 кассет ЦОС)
-                    mean_lst = [statistics.mean(i) for i in data]
-                    # массив средне арифметических значений к максимальному для каждого состояния (среди 8 кассет ЦОС)
-                    comparison = [i for i in map(operator.truediv, max_lst, mean_lst)]
+                    # массив значений максимумов для каждого состояния (среди 8
+                    # кассет ЦОС)
+                    max_lst = (i.pop(i.index(max(i))) for i in data)
+                    # массив средне арифметических значений для каждого
+                    # состояния (среди 8 кассет ЦОС)
+                    mean_lst = (statistics.mean(i) for i in data)
+                    # массив средне арифметических значений к максимальному для
+                    # каждого состояния (среди 8 кассет ЦОС)
+                    comparison = (
+                        i for i in map(
+                            operator.truediv,
+                            max_lst,
+                            mean_lst))
+                    # пороговое значение для определения работоспособности МШУ
+                    db = 10
 
                     # Эти данные надо применить для диаграмм
                     # запись массива максимальных амплитуд для каждого диапазона в словарь.
@@ -5818,31 +5857,29 @@ class mywindow(QtWidgets.QMainWindow):
 
                     self.ui.plot[band] = max_lst_id
                     # вывод массив амплитуд
-                    print(self.ui.plot[band])               
+                    print(self.ui.plot[band])
 
-
-
-                    # поиск совпадений с эталонным массивом
                     """
-                    Число "к = max_lst/mean_lst" (разы) является порогом определения работоспособности МШУ. 
+                    Число "к = max_lst/mean_lst" (разы) является порогом определения работоспособности МШУ.
                     Не рабочий усилитель в МШУ не будет вностить вклад в уровениь шумовой полки приемника.
-                    Значение порога необходимо определить в ходе тестирования.                    
+                    Значение порога необходимо определить в ходе тестирования (примерно 10 дБ).
                     Его необходимо задавать из окна на лицевой панели, при этом пользователь должен задавать его в Дб
-                    Формула Дб = 10*lg(k) (к = 10^(дБ*0,1)) 
+                    Формула к = 10^(дБ*0,1)   (Дб = 10*lg(k))
                     """
-                    mshu_status = [None if k > 2 else i for i, k in zip(map(
-                            operator.eq,
-                            std[band],
-                            max_lst_id
-                    ), comparison)]
+                    # поиск совпадений с эталонным массивом
+                    mshu_status = (None if k > 10**(db * 0.1) else i for i, k in zip(map(
+                        operator.eq,
+                        std[band],
+                        max_lst_id
+                    ), comparison))
                     print(mshu_status)
                     k = -1
                     for i in mshu_status:
                         k += 1
-                        if i == True:
+                        if i:
                             color = "background-color: rgb(10, 150, 10);"
                             status = " connected\n"
-                        elif i == None:
+                        elif i is None:
                             color = "background-color: rgb(232, 225, 16);"
                             status = " possibly broken\n"
                         else:
@@ -5853,7 +5890,7 @@ class mywindow(QtWidgets.QMainWindow):
                         bands[band][k].setStyleSheet(
                             color)
                         self.ui.text += band_rus[band] + \
-                                        str(k + 1) + status
+                            str(k + 1) + status
                         self.ui.textEdit.setText(self.ui.text)
                         self.ui.textEdit.moveCursor(
                             QtGui.QTextCursor.End)
