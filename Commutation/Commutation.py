@@ -35,6 +35,7 @@ class Ui_MainWindow(object):
         self.IP_4202 = '192.168.10.101'  # переменная для ip PV-4201
         self.PING = False  # дефолтная boolean переменная для пинга
         self.text = ""  # дефолтная переменная для текстовых данных
+        self.db = 10  # дефолтная переменная для порогового значения
         self.D2 = []
         self.D3 = []
         self.D4 = []
@@ -5055,32 +5056,47 @@ class Ui_MainWindow(object):
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         SettingsWindow.setObjectName("SettingsWindow")
-        SettingsWindow.resize(310, 250)
+        SettingsWindow.resize(310, 290)
         self.centralwidget = QtWidgets.QWidget(SettingsWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.SpushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.SpushButton.setGeometry(QtCore.QRect(40, 160, 101, 31))
+        self.SpushButton.setGeometry(QtCore.QRect(40, 225, 101, 31))
         self.SpushButton.setObjectName("SpushButton")
         self.SpushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.SpushButton_2.setGeometry(QtCore.QRect(170, 160, 101, 31))
+        self.SpushButton_2.setGeometry(QtCore.QRect(170, 225, 101, 31))
         self.SpushButton_2.setObjectName("SpushButton_2")
+        self.SpushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.SpushButton_3.setGeometry(QtCore.QRect(170, 45, 101, 31))
+        self.SpushButton_3.setObjectName("SpushButton_3")
         self.Slabel = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel.setGeometry(QtCore.QRect(40, 25, 221, 21))
+        self.Slabel.setGeometry(QtCore.QRect(40, 100, 221, 21))
         self.Slabel.setObjectName("Slabel")
         self.Slabel_2 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_2.setGeometry(QtCore.QRect(40, 90, 221, 21))
+        self.Slabel_2.setGeometry(QtCore.QRect(40, 160, 221, 21))
         self.Slabel_2.setObjectName("Slabel_2")
         self.Slabel_3 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_3.setGeometry(QtCore.QRect(40, 180, 231, 61))
+        self.Slabel_3.setGeometry(QtCore.QRect(40, 250, 241, 31))
         self.Slabel_3.setObjectName("Slabel_3")
-        self.Slabel_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.Slabel_3.setStyleSheet('color: red')
         font = QtGui.QFont()
         font.setFamily("Calibri")
-        font.setPointSize(12)
+        font.setPointSize(9)
         self.Slabel_3.setFont(font)
         self.Slabel_3.hide()
+        self.Slabel_4 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_4.setGeometry(QtCore.QRect(40, 10, 221, 31))
+        self.Slabel_4.setObjectName("Slabel_4")
+        self.Slabel_5 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_5.setGeometry(QtCore.QRect(40, 70, 241, 31))
+        self.Slabel_5.setObjectName("Slabel_3")
+        self.Slabel_5.setStyleSheet('color: red')
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(9)
+        self.Slabel_5.setFont(font)
+        self.Slabel_5.hide()
         self.SLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit.setGeometry(QtCore.QRect(40, 50, 51, 31))
+        self.SLineEdit.setGeometry(QtCore.QRect(40, 120, 51, 31))
         self.SLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit.setMaxLength(3)
         self.SLineEdit.setValidator(QIntValidator())
@@ -5091,7 +5107,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit.setFont(font)
         self.SLineEdit.setObjectName("SLineEdit")
         self.SLineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_2.setGeometry(QtCore.QRect(100, 50, 51, 31))
+        self.SLineEdit_2.setGeometry(QtCore.QRect(100, 120, 51, 31))
         self.SLineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_2.setMaxLength(3)
         self.SLineEdit_2.setValidator(QIntValidator())
@@ -5102,7 +5118,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_2.setFont(font)
         self.SLineEdit_2.setObjectName("SLineEdit_2")
         self.SLineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_3.setGeometry(QtCore.QRect(160, 50, 51, 31))
+        self.SLineEdit_3.setGeometry(QtCore.QRect(160, 120, 51, 31))
         self.SLineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_3.setMaxLength(3)
         self.SLineEdit_3.setValidator(QIntValidator())
@@ -5113,7 +5129,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_3.setFont(font)
         self.SLineEdit_3.setObjectName("SLineEdit_3")
         self.SLineEdit_4 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_4.setGeometry(QtCore.QRect(220, 50, 51, 31))
+        self.SLineEdit_4.setGeometry(QtCore.QRect(220, 120, 51, 31))
         self.SLineEdit_4.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_4.setMaxLength(3)
         self.SLineEdit_4.setValidator(QIntValidator())
@@ -5124,7 +5140,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_4.setFont(font)
         self.SLineEdit_4.setObjectName("SLineEdit_4")
         self.SLineEdit_5 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_5.setGeometry(QtCore.QRect(40, 110, 51, 31))
+        self.SLineEdit_5.setGeometry(QtCore.QRect(40, 180, 51, 31))
         self.SLineEdit_5.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_5.setMaxLength(3)
         self.SLineEdit_5.setValidator(QIntValidator())
@@ -5135,7 +5151,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_5.setFont(font)
         self.SLineEdit_5.setObjectName("SLineEdit_5")
         self.SLineEdit_6 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_6.setGeometry(QtCore.QRect(100, 110, 51, 31))
+        self.SLineEdit_6.setGeometry(QtCore.QRect(100, 180, 51, 31))
         self.SLineEdit_6.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_6.setMaxLength(3)
         self.SLineEdit_6.setValidator(QIntValidator())
@@ -5146,7 +5162,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_6.setFont(font)
         self.SLineEdit_6.setObjectName("SLineEdit_6")
         self.SLineEdit_7 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_7.setGeometry(QtCore.QRect(160, 110, 51, 31))
+        self.SLineEdit_7.setGeometry(QtCore.QRect(160, 180, 51, 31))
         self.SLineEdit_7.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_7.setMaxLength(3)
         self.SLineEdit_7.setValidator(QIntValidator())
@@ -5157,7 +5173,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_7.setFont(font)
         self.SLineEdit_7.setObjectName("SLineEdit_7")
         self.SLineEdit_8 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_8.setGeometry(QtCore.QRect(220, 110, 51, 31))
+        self.SLineEdit_8.setGeometry(QtCore.QRect(220, 180, 51, 31))
         self.SLineEdit_8.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_8.setMaxLength(3)
         self.SLineEdit_8.setValidator(QIntValidator())
@@ -5167,6 +5183,17 @@ class Ui_SettingsWindow(object):
         font.setPointSize(16)
         self.SLineEdit_8.setFont(font)
         self.SLineEdit_8.setObjectName("SLineEdit_8")
+        self.SLineEdit_9 = QtWidgets.QLineEdit(self.centralwidget)
+        self.SLineEdit_9.setGeometry(QtCore.QRect(40, 45, 101, 31))
+        self.SLineEdit_9.setAlignment(QtCore.Qt.AlignCenter)
+        self.SLineEdit_9.setMaxLength(3)
+        self.SLineEdit_9.setValidator(QIntValidator())
+        self.SL_9 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SLineEdit_9.setFont(font)
+        self.SLineEdit_9.setObjectName("SLineEdit_9")
         SettingsWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(SettingsWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 21))
@@ -5182,12 +5209,16 @@ class Ui_SettingsWindow(object):
     def retranslateUi(self, SettingsWindow):
         _translate = QtCore.QCoreApplication.translate
         SettingsWindow.setWindowTitle(
-            _translate("SettingsWindow", "IP Settings"))
-        self.SpushButton.setText(_translate("SettingsWindow", "Применить"))
+            _translate("SettingsWindow", "Settings"))
+        self.SpushButton.setText(_translate("SettingsWindow", "Установить IP"))
         self.SpushButton_2.setText(
             _translate(
                 "SettingsWindow",
-                "Закрыть\nбез изменений"))
+                "Закрыть"))
+        self.SpushButton_3.setText(
+            _translate(
+                "SettingsWindow",
+                "Применить"))
         self.Slabel.setText(
             _translate(
                 "SettingsWindow",
@@ -5199,7 +5230,16 @@ class Ui_SettingsWindow(object):
         self.Slabel_3.setText(
             _translate(
                 "SettingsWindow",
-                "Необходимо заполнить\nвсе поля IP-адреса!"))
+                "Необходимо заполнить все поля IP-адреса!"))
+        self.Slabel_4.setText(
+            _translate(
+                "SettingsWindow",
+                "Введите пороговое значение\n"
+                "чувствительности амплитуды, дБ:"))
+        self.Slabel_5.setText(
+            _translate(
+                "SettingsWindow",
+                "Необходимо задать пороговое значение!"))
 
 
 class mywindow(QtWidgets.QMainWindow):
@@ -5215,21 +5255,14 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.pushButton_1.clicked.connect(self.btn_1Clicked)
         self.ui.pushButton_2.clicked.connect(self.IP_btn)
         self.ui.pushButton_3.clicked.connect(self.Noise_btn)
-        self.uiS.SpushButton_2.clicked.connect(self.Quit)
         self.uiS.SpushButton.clicked.connect(self.ChangeIP)
-        self.ui.text = 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
+        self.uiS.SpushButton_2.clicked.connect(self.Quit)
+        self.uiS.SpushButton_3.clicked.connect(self.ChangeDB)
+        self.ui.text = 'Пороговое значение чувствительности: ' + \
+                       str(self.ui.db) + ', дБ\n'
+        self.ui.text += 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
         self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
         self.ui.textEdit.setText(self.ui.text)
-        IP_4201 = self.ui.IP_4201.split('.')
-        IP_4202 = self.ui.IP_4202.split('.')
-        self.uiS.SLineEdit.setText(IP_4201[0])
-        self.uiS.SLineEdit_2.setText(IP_4201[1])
-        self.uiS.SLineEdit_3.setText(IP_4201[2])
-        self.uiS.SLineEdit_4.setText(IP_4201[3])
-        self.uiS.SLineEdit_5.setText(IP_4202[0])
-        self.uiS.SLineEdit_6.setText(IP_4202[1])
-        self.uiS.SLineEdit_7.setText(IP_4202[2])
-        self.uiS.SLineEdit_8.setText(IP_4202[3])
 
     def Noise_btn(self):
         ang_d2_d4_c = (15, 75, 135, 195, 255, 315)
@@ -5339,9 +5372,32 @@ class mywindow(QtWidgets.QMainWindow):
         fig.show()
 
     def Quit(self):
+        # отображение принятых значений в главном текстовом окне
+        self.ui.text = 'Пороговое значение чувствительности: ' + \
+                       str(self.ui.db) + ', дБ\n'
+        self.ui.text += 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
+        self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
+        self.ui.textEdit.setText(self.ui.text)
+        QApplication.processEvents()
+        # закрытие окна настроек
         self.window.close()
 
     # код работы кнопки "Применить"
+    def ChangeDB(self):
+        self.uiS.SL_9=self.uiS.SLineEdit_9.text()
+        # проверка на пустое поля ввода
+        if self.uiS.SL_9 == '':
+            # вывод предупреждения
+            self.uiS.Slabel_5.show()
+            self.uiS.SpushButton_3.setStyleSheet('color: red')
+        else:
+            # изменение значения переменной с порогом
+            self.ui.db=int(self.uiS.SL_9)
+            self.uiS.Slabel_5.hide()
+            self.uiS.SpushButton_3.setStyleSheet('color: green')
+
+
+    # код работы кнопки "Установить IP"
     def ChangeIP(self):
 
         IP_var = [
@@ -5371,7 +5427,9 @@ class mywindow(QtWidgets.QMainWindow):
         # проверка на пустое значение в полях ввода
         for i in IP_var:
             if i == '':
+                # вывод предупреждения
                 self.uiS.Slabel_3.show()
+                self.uiS.SpushButton.setStyleSheet('color: red')
                 bool = False
             else:
                 pass
@@ -5387,13 +5445,29 @@ class mywindow(QtWidgets.QMainWindow):
             # изменение значения переменной с IP-адресом
             self.ui.IP_4201 = '.'.join(IP_4201)
             self.ui.IP_4202 = '.'.join(IP_4202)
-            self.ui.text = 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
-            self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
-            self.ui.textEdit.setText(self.ui.text)
-            QApplication.processEvents()
-            self.window.close()
+            self.uiS.Slabel_3.hide()
+            self.uiS.SpushButton.setStyleSheet('color: green')
 
+    # код работы кнопки "Шестеренка"
     def IP_btn(self):
+        # выставление всех значений и цветов лэйблов
+        # в окне настроек по умолчанию
+        IP_4201 = self.ui.IP_4201.split('.')
+        IP_4202 = self.ui.IP_4202.split('.')
+        self.uiS.SLineEdit.setText(IP_4201[0])
+        self.uiS.SLineEdit_2.setText(IP_4201[1])
+        self.uiS.SLineEdit_3.setText(IP_4201[2])
+        self.uiS.SLineEdit_4.setText(IP_4201[3])
+        self.uiS.SLineEdit_5.setText(IP_4202[0])
+        self.uiS.SLineEdit_6.setText(IP_4202[1])
+        self.uiS.SLineEdit_7.setText(IP_4202[2])
+        self.uiS.SLineEdit_8.setText(IP_4202[3])
+        self.uiS.SLineEdit_9.setText(str(self.ui.db))
+        self.uiS.Slabel_3.hide()
+        self.uiS.Slabel_5.hide()
+        self.uiS.SpushButton.setStyleSheet('color: black')
+        self.uiS.SpushButton_3.setStyleSheet('color: black')
+        # открытие окна настроек
         self.window.show()
 
     """ Метод получения логов при ошибке """
@@ -5849,7 +5923,7 @@ class mywindow(QtWidgets.QMainWindow):
                             max_lst,
                             mean_lst))
                     # пороговое значение для определения работоспособности МШУ
-                    db = 10
+                    db = self.ui.db
 
                     # Эти данные надо применить для диаграмм
                     # запись массива максимальных амплитуд для каждого диапазона в словарь.
@@ -5900,6 +5974,7 @@ class mywindow(QtWidgets.QMainWindow):
 
             self.ui.pushButton.setEnabled(True)
             self.ui.pushButton_1.setEnabled(True)
+            self.ui.pushButton_2.setEnabled(True)
             self.ui.pushButton_3.show()
 
         else:
