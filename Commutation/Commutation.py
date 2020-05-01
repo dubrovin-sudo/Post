@@ -5384,7 +5384,7 @@ class mywindow(QtWidgets.QMainWindow):
 
     # код работы кнопки "Применить"
     def ChangeDB(self):
-        self.uiS.SL_9=self.uiS.SLineEdit_9.text()
+        self.uiS.SL_9 = self.uiS.SLineEdit_9.text()
         # проверка на пустое поля ввода
         if self.uiS.SL_9 == '':
             # вывод предупреждения
@@ -5392,10 +5392,9 @@ class mywindow(QtWidgets.QMainWindow):
             self.uiS.SpushButton_3.setStyleSheet('color: red')
         else:
             # изменение значения переменной с порогом
-            self.ui.db=int(self.uiS.SL_9)
+            self.ui.db = int(self.uiS.SL_9)
             self.uiS.Slabel_5.hide()
             self.uiS.SpushButton_3.setStyleSheet('color: green')
-
 
     # код работы кнопки "Установить IP"
     def ChangeIP(self):
@@ -5860,11 +5859,7 @@ class mywindow(QtWidgets.QMainWindow):
             # эталонный массив № кассет ЦОС
             std = {'D2': std_d2, 'D3': std_d2, 'D4': std_d4, 'D5': std_d5}
             # текст для бегущей строки
-            band_rus = {
-                'D2': 'Д2 - ',
-                'D3': 'Д3 - ',
-                'D4': 'Д4 - ',
-                'D5': 'Д5 - '}
+            band_rus = {'D2': 'Д2 - ', 'D3': 'Д3 - ', 'D4': 'Д4 - ', 'D5': 'Д5 - '}
             # инициализация словаря для хранения амплитуд кассет ЦОС
             plot = {}
 
@@ -5906,6 +5901,12 @@ class mywindow(QtWidgets.QMainWindow):
                     del data[0:4]
                     # деление посылки на отрезки по 8 каналов
                     data = [data[i:i + 8] for i in range(0, len(data), 8)]
+                    # print(data)
+                    # амплитуда шума на входе канала (ch_level - номера кассет
+                    # с неподключенным входом ЦОС)
+                    ch_level = [index + 1 for index,
+                                value in enumerate(list(map(statistics.mean,
+                                                            zip(*data)))) if value < 9]
                     # поиск номера кассеты с максимальной амплитудой в блоке
                     # ЦОС
                     max_lst_id = [i.index(max(i)) + 1 for i in data]
@@ -5917,21 +5918,16 @@ class mywindow(QtWidgets.QMainWindow):
                     mean_lst = (statistics.mean(i) for i in data)
                     # массив средне арифметических значений к максимальному для
                     # каждого состояния (среди 8 кассет ЦОС)
-                    comparison = (
-                        i for i in map(
-                            operator.truediv,
-                            max_lst,
-                            mean_lst))
+                    comparison = (i for i in map(operator.truediv, max_lst, mean_lst))
                     # пороговое значение для определения работоспособности МШУ
                     db = self.ui.db
 
                     # Эти данные надо применить для диаграмм
                     # запись массива максимальных амплитуд для каждого диапазона в словарь.
                     # Доступ к массиву амлпитуд диапазона по ключу band
-
                     self.ui.plot[band] = max_lst_id
                     # вывод массив амплитуд
-                    print(self.ui.plot[band])
+                    # print(self.ui.plot[band])
 
                     """
                     Число "к = max_lst/mean_lst" (разы) является порогом определения работоспособности МШУ.
@@ -5941,30 +5937,38 @@ class mywindow(QtWidgets.QMainWindow):
                     Формула к = 10^(дБ*0,1)   (Дб = 10*lg(k))
                     """
                     # поиск совпадений с эталонным массивом
-                    mshu_status = (None if k > 10**(db * 0.1) else i for i, k in zip(map(
-                        operator.eq,
-                        std[band],
-                        max_lst_id
-                    ), comparison))
-                    print(mshu_status)
+                    mshu_status = ['broken' if k < 10**(db * 0.1) else i for i, k in zip(
+                        map(operator.eq, std[band], max_lst_id), comparison)]
+                    # поиск совпадений с массивом кассет с неподключенным
+                    # входом ЦОС
+                    mshu_status = (
+                        'empty' if k in ch_level else i for i, k in zip(
+                            mshu_status, std[band]))
                     k = -1
                     for i in mshu_status:
                         k += 1
-                        if i:
+                        if i is True:
                             color = "background-color: rgb(10, 150, 10);"
                             status = " connected\n"
-                        elif i is None:
+                        elif i == 'broken':
                             color = "background-color: rgb(232, 225, 16);"
                             status = " possibly broken\n"
-                        else:
+                        elif i == 'empty':
+                            color = "background-color: rgb(48, 41, 41);"
+                            status = " has no input noise\n"
+                        elif i is False:
                             color = "background-color: rgb(150, 10, 10);"
                             status = " not connected\n"
                         # Обращение к интерфейсу (цвет ячейки, надпись в
                         # строке)
                         bands[band][k].setStyleSheet(
                             color)
-                        self.ui.text += band_rus[band] + \
-                            str(k + 1) + status
+                        if i == 'empty':
+                            self.ui.text += band_rus[band] + str(
+                                k + 1) + ' channel ' + str(std[band][k]) + status
+                        else:
+                            self.ui.text += band_rus[band] + \
+                                str(k + 1) + status
                         self.ui.textEdit.setText(self.ui.text)
                         self.ui.textEdit.moveCursor(
                             QtGui.QTextCursor.End)
