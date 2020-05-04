@@ -5878,7 +5878,7 @@ class mywindow(QtWidgets.QMainWindow):
                 data = [
                     random.randint(
                         0,
-                        10000) for i in range(
+                        20) for i in range(
                         band_len[band])]
                 # Прием ответа на запрос
                 while True:
