@@ -37,11 +37,17 @@ class Ui_MainWindow(object):
         self.text = ""  # дефолтная переменная для текстовых данных
         self.db = 10  # дефолтная переменная для порогового значения
 
-        # Команда 0х80 для перевода блока ЦОС в режим паузы
+        # дефолтная команда 0х80 для перевода блока ЦОС в режим паузы
+        # (её значение будет изменено пользователем в окне настроек)
+        self.c_pause = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                         '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
+        # команда для работы только интерфейсной платы
         self.c_pause_1 = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
                          '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
+        # команда для работы блока цос без БК и МУП
         self.c_pause_2 = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
                          '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:0c:80'
+        # команда для работы блока цос вместе с БК и МУП
         self.c_pause_3 = '2e:00:80:00:00:00:00:10:00:00:00:00:6a:18:00:00:38:00:00:00:' \
                          '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:08:80'
         self.c_pause_1 = self.c_pause_1.split(':')
@@ -50,11 +56,24 @@ class Ui_MainWindow(object):
         self.c_pause_2 = ''.join(self.c_pause_2)  # преобразует байты в строку
         self.c_pause_3 = self.c_pause_3.split(':')
         self.c_pause_3 = ''.join(self.c_pause_3)  # преобразует байты в строку
-        # Команда ?
+
+        # команда 0х8А для перевода блока ЦОС в режим тестирования и смены
+        # частоты
+        self.c_freq = '26:00:8a:00:02:00:08:00:03:00:00:00:00:00:00:00:00:00:00:00:' \
+                      '00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
+        self.c_freq = self.c_freq.split(':')
+        self.c_freq = ''.join(self.c_freq)
+        # дефолтная команда 0х80 для перевода блока ЦОС в технологический режим
+        # (её значение будет изменено пользователем в окне настроек)
+        self.c_techn = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                         '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:4c:80'
+        # команда для работы только интерфейсной платы
         self.c_techn_1 = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
                          '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:4c:80'
+        # команда для работы блока цос без БК и МУП
         self.c_techn_2 = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
                          '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:0c:80'
+        # команда для работы блока цос вместе с БК и МУП
         self.c_techn_3 = '2e:00:80:00:00:00:00:10:00:00:00:00:6a:18:00:00:38:00:00:00:' \
                          '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:08:80'
         self.c_techn_1 = self.c_techn_1.split(':')
@@ -63,12 +82,6 @@ class Ui_MainWindow(object):
         self.c_techn_2 = ''.join(self.c_techn_2)  # преобразует байты в строку
         self.c_techn_3 = self.c_techn_3.split(':')
         self.c_techn_3 = ''.join(self.c_techn_3)  # преобразует байты в строку
-        # Команда 0х8А для перевода блока ЦОС в режим тестирования и смены
-        # частоты
-        self.c_freq = '26:00:8a:00:02:00:08:00:03:00:00:00:00:00:00:00:00:00:00:00:' \
-                      '00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
-        self.c_freq = c_freq.split(':')
-        self.c_freq = ''.join(c_freq)
 
         self.D2 = []
         self.D3 = []
@@ -5085,47 +5098,76 @@ class Ui_MainWindow(object):
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         SettingsWindow.setObjectName("SettingsWindow")
-        SettingsWindow.resize(310, 290)
+        SettingsWindow.resize(310, 430)
         self.centralwidget = QtWidgets.QWidget(SettingsWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.SpushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.SpushButton.setGeometry(QtCore.QRect(40, 225, 101, 31))
+        self.SpushButton.setGeometry(QtCore.QRect(40, 365, 101, 31))
         self.SpushButton.setObjectName("SpushButton")
         self.SpushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.SpushButton_2.setGeometry(QtCore.QRect(170, 225, 101, 31))
+        self.SpushButton_2.setGeometry(QtCore.QRect(170, 365, 101, 31))
         self.SpushButton_2.setObjectName("SpushButton_2")
         self.SpushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.SpushButton_3.setGeometry(QtCore.QRect(170, 45, 101, 31))
+        self.SpushButton_3.setGeometry(QtCore.QRect(170, 185, 101, 31))
         self.SpushButton_3.setObjectName("SpushButton_3")
+        self.SpushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.SpushButton_4.setGeometry(QtCore.QRect(170, 95, 101, 31))
+        self.SpushButton_4.setObjectName("SpushButton_4")
+        self.SpushButton_4.setEnabled(False)
+        self.SpushButton_5 = QtWidgets.QPushButton(self.centralwidget)
+        self.SpushButton_5.setGeometry(QtCore.QRect(170, 30, 101, 31))
+        self.SpushButton_5.setObjectName("SpushButton_4")
         self.Slabel = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel.setGeometry(QtCore.QRect(40, 100, 221, 21))
+        self.Slabel.setGeometry(QtCore.QRect(40, 240, 221, 21))
         self.Slabel.setObjectName("Slabel")
         self.Slabel_2 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_2.setGeometry(QtCore.QRect(40, 160, 221, 21))
+        self.Slabel_2.setGeometry(QtCore.QRect(40, 300, 221, 21))
         self.Slabel_2.setObjectName("Slabel_2")
         self.Slabel_3 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_3.setGeometry(QtCore.QRect(40, 250, 241, 31))
+        self.Slabel_3.setGeometry(QtCore.QRect(40, 390, 241, 31))
         self.Slabel_3.setObjectName("Slabel_3")
         self.Slabel_3.setStyleSheet('color: red')
         font = QtGui.QFont()
         font.setFamily("Calibri")
-        font.setPointSize(12)
+        font.setPointSize(9)
         self.Slabel_3.setFont(font)
         self.Slabel_3.hide()
         self.Slabel_4 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_4.setGeometry(QtCore.QRect(40, 10, 221, 31))
+        self.Slabel_4.setGeometry(QtCore.QRect(40, 150, 221, 31))
         self.Slabel_4.setObjectName("Slabel_4")
         self.Slabel_5 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_5.setGeometry(QtCore.QRect(40, 70, 241, 31))
-        self.Slabel_5.setObjectName("Slabel_3")
+        self.Slabel_5.setGeometry(QtCore.QRect(40, 210, 241, 31))
+        self.Slabel_5.setObjectName("Slabel_5")
         self.Slabel_5.setStyleSheet('color: red')
         font = QtGui.QFont()
         font.setFamily("Calibri")
         font.setPointSize(9)
         self.Slabel_5.setFont(font)
         self.Slabel_5.hide()
+        self.Slabel_6 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_6.setGeometry(QtCore.QRect(40, 120, 241, 31))
+        self.Slabel_6.setObjectName("Slabel_6")
+        self.Slabel_6.setStyleSheet('color: red')
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(9)
+        self.Slabel_6.setFont(font)
+        self.Slabel_6.hide()
+        self.Slabel_7 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_7.setGeometry(QtCore.QRect(40, 70, 221, 31))
+        self.Slabel_7.setObjectName("Slabel_7")
+        self.Slabel_8 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_8.setGeometry(QtCore.QRect(40, 5, 221, 31))
+        self.Slabel_8.setObjectName("Slabel_8")
+        self.SCombo = QtWidgets.QComboBox(self.centralwidget)
+        self.SCombo.setGeometry(QtCore.QRect(40, 30, 101, 31))
+        self.SCombo.setObjectName("SCombo")
+        self.Smode = ['Инт. плата',
+                      'ИП и ЦОС',
+                      'ЦОС, МУП, БК']
+        self.SCombo.addItems(self.Smode)
         self.SLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit.setGeometry(QtCore.QRect(40, 120, 51, 31))
+        self.SLineEdit.setGeometry(QtCore.QRect(40, 260, 51, 31))
         self.SLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit.setMaxLength(3)
         self.SLineEdit.setValidator(QIntValidator())
@@ -5136,7 +5178,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit.setFont(font)
         self.SLineEdit.setObjectName("SLineEdit")
         self.SLineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_2.setGeometry(QtCore.QRect(100, 120, 51, 31))
+        self.SLineEdit_2.setGeometry(QtCore.QRect(100, 260, 51, 31))
         self.SLineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_2.setMaxLength(3)
         self.SLineEdit_2.setValidator(QIntValidator())
@@ -5147,7 +5189,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_2.setFont(font)
         self.SLineEdit_2.setObjectName("SLineEdit_2")
         self.SLineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_3.setGeometry(QtCore.QRect(160, 120, 51, 31))
+        self.SLineEdit_3.setGeometry(QtCore.QRect(160, 260, 51, 31))
         self.SLineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_3.setMaxLength(3)
         self.SLineEdit_3.setValidator(QIntValidator())
@@ -5158,7 +5200,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_3.setFont(font)
         self.SLineEdit_3.setObjectName("SLineEdit_3")
         self.SLineEdit_4 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_4.setGeometry(QtCore.QRect(220, 120, 51, 31))
+        self.SLineEdit_4.setGeometry(QtCore.QRect(220, 260, 51, 31))
         self.SLineEdit_4.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_4.setMaxLength(3)
         self.SLineEdit_4.setValidator(QIntValidator())
@@ -5169,7 +5211,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_4.setFont(font)
         self.SLineEdit_4.setObjectName("SLineEdit_4")
         self.SLineEdit_5 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_5.setGeometry(QtCore.QRect(40, 180, 51, 31))
+        self.SLineEdit_5.setGeometry(QtCore.QRect(40, 320, 51, 31))
         self.SLineEdit_5.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_5.setMaxLength(3)
         self.SLineEdit_5.setValidator(QIntValidator())
@@ -5180,7 +5222,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_5.setFont(font)
         self.SLineEdit_5.setObjectName("SLineEdit_5")
         self.SLineEdit_6 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_6.setGeometry(QtCore.QRect(100, 180, 51, 31))
+        self.SLineEdit_6.setGeometry(QtCore.QRect(100, 320, 51, 31))
         self.SLineEdit_6.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_6.setMaxLength(3)
         self.SLineEdit_6.setValidator(QIntValidator())
@@ -5191,7 +5233,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_6.setFont(font)
         self.SLineEdit_6.setObjectName("SLineEdit_6")
         self.SLineEdit_7 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_7.setGeometry(QtCore.QRect(160, 180, 51, 31))
+        self.SLineEdit_7.setGeometry(QtCore.QRect(160, 320, 51, 31))
         self.SLineEdit_7.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_7.setMaxLength(3)
         self.SLineEdit_7.setValidator(QIntValidator())
@@ -5202,7 +5244,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_7.setFont(font)
         self.SLineEdit_7.setObjectName("SLineEdit_7")
         self.SLineEdit_8 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_8.setGeometry(QtCore.QRect(220, 180, 51, 31))
+        self.SLineEdit_8.setGeometry(QtCore.QRect(220, 320, 51, 31))
         self.SLineEdit_8.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_8.setMaxLength(3)
         self.SLineEdit_8.setValidator(QIntValidator())
@@ -5213,7 +5255,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_8.setFont(font)
         self.SLineEdit_8.setObjectName("SLineEdit_8")
         self.SLineEdit_9 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_9.setGeometry(QtCore.QRect(40, 45, 101, 31))
+        self.SLineEdit_9.setGeometry(QtCore.QRect(40, 185, 101, 31))
         self.SLineEdit_9.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_9.setMaxLength(3)
         self.SLineEdit_9.setValidator(QIntValidator())
@@ -5223,6 +5265,17 @@ class Ui_SettingsWindow(object):
         font.setPointSize(16)
         self.SLineEdit_9.setFont(font)
         self.SLineEdit_9.setObjectName("SLineEdit_9")
+        self.SSpinBox_10 = QtWidgets.QSpinBox(self.centralwidget)
+        self.SSpinBox_10.setGeometry(QtCore.QRect(40, 95, 101, 31))
+        self.SSpinBox_10.setRange(50, 500)
+        self.SSpinBox_10.setAlignment(QtCore.Qt.AlignCenter)
+        self.SL_10 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SSpinBox_10.setFont(font)
+        self.SSpinBox_10.setObjectName("SSpinBox_10")
+        self.SSpinBox_10.setEnabled(False)
         SettingsWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(SettingsWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 21))
@@ -5239,16 +5292,23 @@ class Ui_SettingsWindow(object):
         _translate = QtCore.QCoreApplication.translate
         SettingsWindow.setWindowTitle(
             _translate("SettingsWindow",
-                       "IP Settings"))
+                       "Settings"))
         self.SpushButton.setText(
-            _translate(
-                "SettingsWindow",
-                "Установить IP"))
+            _translate("SettingsWindow",
+                       "Установить IP"))
         self.SpushButton_2.setText(
             _translate(
                 "SettingsWindow",
                 "Закрыть"))
         self.SpushButton_3.setText(
+            _translate(
+                "SettingsWindow",
+                "Применить"))
+        self.SpushButton_4.setText(
+            _translate(
+                "SettingsWindow",
+                "Применить"))
+        self.SpushButton_5.setText(
             _translate(
                 "SettingsWindow",
                 "Применить"))
@@ -5273,6 +5333,18 @@ class Ui_SettingsWindow(object):
             _translate(
                 "SettingsWindow",
                 "Необходимо задать пороговое значение!"))
+        self.Slabel_6.setText(
+            _translate(
+                "SettingsWindow",
+                "Необходимо задать время задержки!"))
+        self.Slabel_7.setText(
+            _translate(
+                "SettingsWindow",
+                "Введите время задержки МШУ (50-500), мкс:"))
+        self.Slabel_8.setText(
+            _translate(
+                "SettingsWindow",
+                "Выберите режим работы ЦОС:"))
 
 
 class mywindow(QtWidgets.QMainWindow):
@@ -5291,6 +5363,8 @@ class mywindow(QtWidgets.QMainWindow):
         self.uiS.SpushButton.clicked.connect(self.ChangeIP)
         self.uiS.SpushButton_2.clicked.connect(self.Quit)
         self.uiS.SpushButton_3.clicked.connect(self.ChangeDB)
+        self.uiS.SpushButton_4.clicked.connect(self.ChangeDelay)
+        self.uiS.SpushButton_5.clicked.connect(self.ChangeMode)
         self.ui.text = 'Пороговое значение чувствительности: ' + \
                        str(self.ui.db) + ', дБ\n'
         # запись в переменную text информации о текущих IP-адресах касет
@@ -5417,9 +5491,20 @@ class mywindow(QtWidgets.QMainWindow):
 
         fig.show()
 
+    # код работы кнопки "Закрыть"
     def Quit(self):
+        # разблокировка неактивных виджетов
+        self.uiS.SpushButton_4.setEnabled(True)
+        self.uiS.SSpinBox_10.setEnabled(True)
+        self.uiS.SpushButton_5.setEnabled(True)
+        self.uiS.SCombo.setEnabled(True)
         # отображение принятых значений в главном текстовом окне
-        self.ui.text = 'Пороговое значение чувствительности: ' + \
+        TextMode = ['только интерфейсная плата.',
+                    'интерфейсная плата и блок ЦОС',
+                    'блок ЦОС, МУП, БК']
+        self.ui.text = 'Режим работы: ' + \
+                       TextMode[self.uiS.SCombo.currentIndex()] + '\n'
+        self.ui.text += 'Пороговое значение чувствительности: ' + \
                        str(self.ui.db) + ', дБ\n'
         self.ui.text += 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
         self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
@@ -5428,7 +5513,50 @@ class mywindow(QtWidgets.QMainWindow):
         # закрытие окна настроек
         self.window.close()
 
-    # код работы кнопки "Применить",
+    # код работы кнопки "Применить" (смена режима)
+    def ChangeMode(self):
+        # переменная в которую записывается текущий индекс выпадающего меню
+        ComboIndex = self.uiS.SCombo.currentIndex()
+        # создание списков с набором команд для различных режимов работы
+        pauseList = [self.ui.c_pause_1, self.ui.c_pause_2, self.ui.c_pause_3]
+        technList = [self.ui.c_techn_1, self.ui.c_techn_2, self.ui.c_techn_3]
+        # запись в рабочую переменную режима соответствующего индексу выпадающего меню
+        self.ui.c_pause = pauseList[ComboIndex]
+        self.ui.c_techn = technList[ComboIndex]
+        self.uiS.SpushButton_5.setStyleSheet('color: green')
+        # запрет пользователю вносить дальнейшие изменения в режим работы,
+        # поскольку далее в команде 0х80 необходимо изменить регистры задержки МШУ
+        self.uiS.SpushButton_5.setEnabled(False)
+        self.uiS.SCombo.setEnabled(False)
+        # разблокировка интерфейса изменения задержки МШУ, для
+        # последовательной корректировки команды 0х80
+        self.uiS.SpushButton_4.setEnabled(True)
+        self.uiS.SSpinBox_10.setEnabled(True)
+
+
+
+
+    # код работы кнопки "Применить"(задержка),
+    # находящейся в окне настроек IP-адреса
+    def ChangeDelay(self):
+        # запись в переменную, значения записанного в spinbox
+        self.uiS.SL_10 = self.uiS.SSpinBox_10.value()
+        # преобразование микросекунд в значение задержки
+        # в шестнадцатиричном формате
+        eq = int((int(self.uiS.SL_10)*(10**6))/8000)
+        eq = str(hex(eq))
+        eq = eq.replace("0x", "")
+        # расстановка старшего и младшего байта в правильной последовательности
+        eq = eq[2:] + eq[:2]
+        # внесение изменений в регистры задержки команды 0х80
+        self.ui.c_pause = self.ui.c_pause[:24] + eq + self.ui.c_pause[28:]
+        self.ui.c_techn = self.ui.c_techn[:24] + eq + self.ui.c_techn[28:]
+        self.uiS.SpushButton_4.setStyleSheet('color: green')
+        # Запрет на внесение
+        self.uiS.SpushButton_4.setEnabled(False)
+        self.uiS.SSpinBox_10.setEnabled(False)
+
+    # код работы кнопки "Применить(порог)",
     # находящейся в окне настроек IP-адреса
     def ChangeDB(self):
         self.uiS.SL_9 = self.uiS.SLineEdit_9.text()
@@ -5495,9 +5623,10 @@ class mywindow(QtWidgets.QMainWindow):
                 IP_4201.append(i)
             for i in IP_var[4:]:
                 IP_4202.append(i)
-
-            self.ui.IP_4201 = '.'.join(IP_4201) # запись IP-адреса PV-4201 из массива
-            self.ui.IP_4202 = '.'.join(IP_4202) # запись IP-адреса PV-4202 из массива
+            # запись IP-адреса PV-4201 из массива
+            self.ui.IP_4201 = '.'.join(IP_4201)
+            # запись IP-адреса PV-4202 из массива
+            self.ui.IP_4202 = '.'.join(IP_4202)
             self.uiS.Slabel_3.hide()
             self.uiS.SpushButton.setStyleSheet('color: green')
 
@@ -5520,12 +5649,15 @@ class mywindow(QtWidgets.QMainWindow):
         self.uiS.SLineEdit_9.setText(str(self.ui.db))
         self.uiS.Slabel_3.hide()
         self.uiS.Slabel_5.hide()
+        self.uiS.Slabel_6.hide()
         self.uiS.SpushButton.setStyleSheet('color: black')
         self.uiS.SpushButton_3.setStyleSheet('color: black')
+        self.uiS.SpushButton_4.setStyleSheet('color: black')
+        self.uiS.SpushButton_5.setStyleSheet('color: black')
         # открытие окна настроек
         self.window.show()
 
-    # метод проверки времени пинга
+    # код проверки времени пинга
     def btn_1Clicked(self):
         self.ui.text = 'Запрос ответа от PV-4201 и PV-4202...\n'
         self.ui.textEdit.setText(self.ui.text)
@@ -5821,29 +5953,22 @@ class mywindow(QtWidgets.QMainWindow):
             self.ui.d5o_12_1]
 
         # Эталонные № кассет ЦОС
-        std_d2 = [4, 1, 8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 4, 1,
-                  8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 1, 5, 2, 6, 3, 7]
-        std_d4 = [1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
+        std_d2 = (4, 1, 8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 4, 1,
+                  8, 5, 4, 2, 8, 6, 4, 3, 8, 7, 1, 5, 2, 6, 3, 7)
+        std_d4 = (1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
                   1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
                   1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
                   1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
                   1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5,
-                  1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5, 2, 3, 4, 8, 7, 6]
-        std_d5 = [1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
+                  1, 2, 5, 6, 1, 3, 5, 7, 1, 4, 5, 8, 1, 5, 2, 3, 4, 8, 7, 6)
+        std_d5 = (1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
                   1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
                   1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
                   1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
                   1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2,
-                  1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2, 3, 5, 7, 8, 6, 4]
+                  1, 3, 2, 4, 1, 5, 2, 6, 1, 7, 2, 8, 1, 2, 3, 5, 7, 8, 6, 4)
 
         if self.ui.response == True:
-            # инициализация сокета
-            sock_send = socket.socket(
-                socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-            sock_send.bind(('', 2000))
-            # Перевод блока ЦОС в режим паузы командой 0х80
-            sock_send.sendto(bytes.fromhex(c_pause), (ip[band], 2000))
-            time.sleep(1)
 
             """ Cловари данных """
             # обращение к интерфейсу
@@ -5861,6 +5986,15 @@ class mywindow(QtWidgets.QMainWindow):
             # инициализация словаря для хранения амплитуд кассет ЦОС
             plot = {}
 
+            # инициализация сокета
+            sock_send = socket.socket(
+                socket.AF_INET, socket.SOCK_DGRAM)  # UDP
+            sock_send.bind(('', 2000))
+            # Перевод блока ЦОС в режим паузы командой 0х80
+            sock_send.sendto(bytes.fromhex(self.ui.c_pause), (self.ui.IP_4201, 2000))
+            sock_send.sendto(bytes.fromhex(self.ui.c_pause), (self.ui.IP_4202, 2000))
+            time.sleep(1)
+
             """ Начало работы программы """
             for band in bands:
 
@@ -5872,16 +6006,16 @@ class mywindow(QtWidgets.QMainWindow):
 
                 # команда 0х8А для установки частоты freq[band] ГГц
                 # (2/4/8/18 ) ГГц
-                c_freq = c_freq[:12] + freq[band] + c_freq[14:]
+
+                self.ui.c_freq = self.ui.c_freq[:12] + freq[band] + self.ui.c_freq[14:]
                 # Отправка команды 0х8А с установленной частотой
                 # freq[band] ГГц на адрес ip[band]
-                sock_send.sendto(bytes.fromhex(c_freq), (ip[band], 2000))
+                sock_send.sendto(bytes.fromhex(self.ui.c_freq), (ip[band], 2000))
                 time.sleep(1)  # определить задержу в будущем
                 # Перевод РПУ переведен в режим тестирования (командой 0х8А????)
-                sock_send.sendto(bytes.fromhex(c_techn), (ip[band], 2000))
+                sock_send.sendto(bytes.fromhex(self.ui.c_techn), (ip[band], 2000))
+
                 time.sleep(1)
-
-
                 # Прием ответа на запрос
                 while True:
                     # формируем буфер
@@ -5906,6 +6040,7 @@ class mywindow(QtWidgets.QMainWindow):
                     data = [data[i:i + 8] for i in range(0, len(data), 8)]
                     # поиск номера кассеты с максимальной амплитудой в блоке
                     # ЦОС
+
                     print(data)
                     max_lst_id = [i.index(max(i)) + 1 for i in data]
                     # массив значений максимумов для каждого состояния (среди 8
