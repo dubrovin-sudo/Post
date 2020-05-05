@@ -32,10 +32,56 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         """ Пользовательские глобальные переменные """
         self.IP_4201 = '192.168.10.100'  # переменная для ip PV-4201
-        self.IP_4202 = '192.168.10.101'  # переменная для ip PV-4201
+        self.IP_4202 = '192.168.10.100'  # переменная для ip PV-4201
         self.PING = False  # дефолтная boolean переменная для пинга
         self.text = ""  # дефолтная переменная для текстовых данных
         self.db = 10  # дефолтная переменная для порогового значения
+
+        # дефолтная команда 0х80 для перевода блока ЦОС в режим паузы
+        # (её значение будет изменено пользователем в окне настроек)
+        self.c_pause = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                       '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
+        # команда для работы только интерфейсной платы
+        self.c_pause_1 = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                         '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:4c:80'
+        # команда для работы блока цос без БК и МУП
+        self.c_pause_2 = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                         '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:0c:80'
+        # команда для работы блока цос вместе с БК и МУП
+        self.c_pause_3 = '2e:00:80:00:00:00:00:10:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                         '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:00:00:08:80'
+        self.c_pause_1 = self.c_pause_1.split(':')
+        self.c_pause_1 = ''.join(self.c_pause_1)  # преобразует байты в строку
+        self.c_pause_2 = self.c_pause_2.split(':')
+        self.c_pause_2 = ''.join(self.c_pause_2)  # преобразует байты в строку
+        self.c_pause_3 = self.c_pause_3.split(':')
+        self.c_pause_3 = ''.join(self.c_pause_3)  # преобразует байты в строку
+        # команда 0х8А для перевода блока ЦОС в режим тестирования и смены
+        # частоты
+        self.c_freq = '26:00:8a:00:02:00:08:00:03:00:00:00:00:00:00:00:00:00:00:00:' \
+                      '00:00:00:00:00:00:00:00:08:00:ff:0f:ff:00:01:00:01:00:36:00'
+        self.c_freq = self.c_freq.split(':')
+        self.c_freq = ''.join(self.c_freq)
+        # дефолтная команда 0х80 для перевода блока ЦОС в технологический режим
+        # (её значение будет изменено пользователем в окне настроек)
+        self.c_techn = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                       '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:4c:80'
+        # команда для работы только интерфейсной платы
+        self.c_techn_1 = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                         '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:4c:80'
+        # команда для работы блока цос без БК и МУП
+        self.c_techn_2 = '2e:00:80:00:00:00:00:14:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                         '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:0c:80'
+        # команда для работы блока цос вместе с БК и МУП
+        self.c_techn_3 = '2e:00:80:00:00:00:00:10:00:00:00:00:6a:18:00:00:38:00:00:00:' \
+                         '08:00:64:00:64:00:00:00:00:00:00:00:00:00:00:00:00:00:64:00:00:00:10:00:05:00:08:80'
+        self.c_techn_1 = self.c_techn_1.split(':')
+        self.c_techn_1 = ''.join(self.c_techn_1)  # преобразует байты в строку
+        self.c_techn_2 = self.c_techn_2.split(':')
+        self.c_techn_2 = ''.join(self.c_techn_2)  # преобразует байты в строку
+        self.c_techn_3 = self.c_techn_3.split(':')
+        self.c_techn_3 = ''.join(self.c_techn_3)  # преобразует байты в строку
+        #
         self.D2 = []
         self.D3 = []
         self.D4 = []
@@ -46,62 +92,62 @@ class Ui_MainWindow(object):
             'D3': self.D3,
             'D4': self.D4,
             'D5': self.D5}
-
-        self.icon = b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52\x00\x00\x00\x1e"\
-            b"\x00\x00\x00\x1e\x08\x06\x00\x00\x00\x3b\x30\xae\xa2\x00\x00\x00\x01\x73\x52\x47"\
-            b"\x42\x00\xae\xce\x1c\xe9\x00\x00\x00\x04\x67\x41\x4d\x41\x00\x00\xb1\x8f\x0b\xfc"\
-            b"\x61\x05\x00\x00\x00\x09\x70\x48\x59\x73\x00\x00\x0e\xc4\x00\x00\x0e\xc4\x01\x95"\
-            b"\x2b\x0e\x1b\x00\x00\x00\x41\x74\x45\x58\x74\x43\x6f\x6d\x6d\x65\x6e\x74\x00\x43"\
-            b"\x52\x45\x41\x54\x4f\x52\x3a\x20\x67\x64\x2d\x6a\x70\x65\x67\x20\x76\x31\x2e\x30"\
-            b"\x20\x28\x75\x73\x69\x6e\x67\x20\x49\x4a\x47\x20\x4a\x50\x45\x47\x20\x76\x36\x32"\
-            b"\x29\x2c\x20\x71\x75\x61\x6c\x69\x74\x79\x20\x3d\x20\x38\x35\x0a\xcc\xf0\xc6\xe1"\
-            b"\x00\x00\x03\x89\x49\x44\x41\x54\x48\x4b\x7d\x96\x4b\x4e\x2c\x31\x0c\x45\x0b\x9a"\
-            b"\xbf\x40\x02\x86\x2d\xc4\x9e\x40\xc0\x88\x55\x20\x3e\x62\x8a\x10\x30\xa1\xc7\xbd"\
-            b"\x0b\xf6\x81\xc4\x98\x7d\x80\xf8\x7f\xea\x71\x4c\x9f\xe0\xce\x2b\xb8\x52\x14\x97"\
-            b"\x63\x5f\xdf\x38\xa9\xea\x6e\xda\x2f\x7c\x7e\x7e\xb6\x6f\x6f\x6f\x98\x61\xbf\xbf"\
-            b"\xbf\x87\x2d\x78\xfe\xf8\xf8\x18\x3d\xb5\x61\x13\xa7\xef\xf5\xf5\x35\xe6\x1c\xc7"\
-            b"\x3a\x03\xc0\x9d\xe3\x89\x8b\xc2\x02\x47\x2e\x9a\x8b\xd5\x90\x14\x40\x9c\xf3\x58"\
-            b"\xcb\x22\x32\x14\xd4\xb8\xd3\x1a\x99\x38\xdb\x90\x5d\x5c\x5c\xb4\x47\x47\x47\xed"\
-            b"\xc1\xc1\x41\x7b\x79\x79\x19\x7e\x62\x5e\x5e\x5e\xc2\x06\x5d\x42\x04\x1d\x8a\x1d"\
-            b"\xe7\xe2\x06\x18\xdc\xa5\xba\xd7\xeb\xb5\x4d\xd3\xb4\x93\x93\x93\x31\x1e\x1e\x1e"\
-            b"\x46\x2b\xdf\xc8\x45\x32\x9e\x9f\x9f\x0b\x5f\xe3\xf9\x64\xe4\x1d\x82\x3a\x66\x62"\
-            b"\x62\xa2\x10\x60\x0b\xf2\xf0\x9b\x9f\x45\xe7\x0d\x81\x72\xc6\x59\x25\x09\x77\x77"\
-            b"\x77\xb1\xb3\x8d\x8d\x8d\x91\xf7\x1b\xec\x70\x6d\x6d\x2d\x6c\x72\x96\x97\x97\x63"\
-            b"\xf7\xe4\xc8\xb1\xb3\xb3\xd3\xce\xcc\xcc\x94\xae\xd5\x20\x36\x0a\x67\x35\xee\x0e"\
-            b"\x32\xc6\xd4\xd4\x54\xb1\xe7\xe7\xe7\x63\x56\xb5\x58\x5c\x5c\x2c\x6d\x67\xdd\x79"\
-            b"\x6e\x6e\x2e\xd6\xe1\x37\xc7\x63\x6d\x6c\x87\x33\x01\xb3\xb3\xb3\x91\x08\xf2\x85"\
-            b"\xc9\x2d\xcf\x3b\x21\xa7\xe6\x01\x70\xd0\x35\x5f\x27\x8b\x33\x37\x99\xc0\xa4\xdd"\
-            b"\xdd\xdd\x50\xcd\xb3\xc1\x20\xdb\xb9\x4b\xbf\x81\xc2\x1e\x55\x16\x84\x1d\xdb\x22"\
-            b"\x59\x02\x09\x51\xaa\x9d\xc5\xa1\xfe\xe9\xe9\x29\x6e\x68\xee\x86\xc4\x8a\x65\x20"\
-            b"\x1e\xe4\x4e\x19\x57\x2e\x97\x85\x99\x21\x47\x6d\xbe\xfe\xf8\x21\xc0\xcf\xe0\xf2"\
-            b"\x30\x73\xab\x39\xfb\x1a\x88\xcd\x37\x5e\x1e\x31\xf6\x3a\xe5\xf7\x19\x52\xc1\x0e"\
-            b"\x59\xa3\x0b\x0c\x44\x48\x44\x81\x9b\x9b\x9b\x28\xa2\x50\x7c\xc4\x10\x0b\x3f\x36"\
-            b"\x03\x98\x1b\xec\x8f\x8f\x8f\xe1\x94\x0c\x12\x0a\x67\x21\xfa\x6c\x7b\xdd\xbe\xdb"\
-            b"\xdb\xdb\x31\xb1\x0a\xf5\xae\x64\x2e\x50\x22\xcf\xce\xce\x22\x91\xd1\xef\xf7\x47"\
-            b"\xde\x1f\x31\xbc\x56\x40\xe5\x00\x1b\x42\x7d\xe4\xde\xdf\xdf\x87\x0d\xf0\xaf\xae"\
-            b"\xae\x86\x1f\xe1\xe7\xe7\xe7\xe1\x47\x7c\xb9\xd5\xfb\xfb\xfb\xa1\x50\x65\xf8\x2d"\
-            b"\xba\xb7\xb7\x17\xc9\xae\xe9\x37\x57\x5c\x5d\x5d\x95\x0b\xa5\x18\x67\xb8\x0f\x0f"\
-            b"\x0f\xc3\xc6\x17\x3b\xc6\x38\x3e\x3e\x0e\x72\x21\x29\x6b\x74\x40\x42\x20\x19\xc8"\
-            b"\x36\xb7\xdc\xb8\xff\x5a\xfb\xc5\xcd\x0f\x8b\x88\x4a\xec\x60\x38\x1c\x46\x3b\x18"\
-            b"\xeb\xeb\xeb\xb1\x28\x20\xf7\x52\x81\x2c\x0a\x58\x04\xf2\xa5\xa5\xa5\xf0\xdb\x95"\
-            b"\x95\x95\x95\xe0\x9c\x9e\x9e\x6e\x4f\x4f\x4f\xc3\x07\x4a\xab\x09\x46\x31\x97\x86"\
-            b"\xf3\xcc\x85\x00\xc9\x3e\x43\x9a\xd7\x00\x37\xba\xce\xe1\x93\x69\x9e\x42\x00\x76"\
-            b"\xe9\x6d\xbe\xa5\x80\x04\xc1\x8e\x10\x05\x51\x4d\x20\x88\xa7\xb0\x3c\xb6\x9d\xa2"\
-            b"\x99\xdb\x8f\x4e\x93\x15\x4a\xc4\x22\x6d\xb3\x1b\xfa\xaf\xaf\xaf\x83\xcc\xbb\x10"\
-            b"\xca\xbf\x6c\x46\xbe\x03\xc0\x35\x91\xeb\x60\xc7\x4a\x56\x64\x80\xaf\x4f\x16\x03"\
-            b"\x22\x69\x54\x8c\x5d\xfa\xd5\xc2\x8f\x50\xe2\xb1\x19\x70\xf0\xec\x1d\xc8\xdd\x88"\
-            b"\xc2\x16\x13\x9b\x9b\x9b\x91\x44\x40\xbd\xd6\x05\x88\xed\x4e\x06\xe2\xf8\x6d\x56"\
-            b"\x3c\xd0\x2e\xbd\xc0\x41\x32\x85\x38\xab\xdc\x26\x80\x08\x0a\xb8\x1b\x61\x41\x2e"\
-            b"\x17\x3b\xe2\xf3\x2a\x10\x0f\x0f\xfe\xdc\x09\x46\xb0\xff\xa6\x96\x44\xda\x89\xcd"\
-            b"\x19\x62\xe3\xb3\xb0\xf3\xc2\xc2\xc2\x58\xbc\xf7\x00\x1b\x41\xa0\xde\x75\x14\xf6"\
-            b"\x0c\x80\x64\x80\xc4\xad\xad\xad\xd1\xd3\x37\xf0\x51\x48\xf8\xaf\x44\x40\xba\xbd"\
-            b"\xbd\x1d\xbe\xcc\x5b\xa3\xfc\x03\x01\x79\xe7\xf8\x79\x76\x06\x5e\x30\xfe\xa1\x98"\
-            b"\xe7\xbb\x4b\x8c\x47\x01\x32\x6f\x17\xc6\xce\x38\xcf\x40\x3b\x77\x81\xf3\x62\x37"\
-            b"\x79\xb8\xb3\xcc\xd1\x75\x7c\x19\xf1\x1e\xd7\x05\x98\xff\x52\x7e\x72\x72\x12\x1f"\
-            b"\x7c\xbe\xbd\x83\xc1\x20\x7c\xc6\xe5\x82\x59\x70\x8d\xb1\x0f\x08\xb6\xed\xec\x2a"\
-            b"\xc8\xba\x7e\x66\x46\x7d\x0c\xa0\x2b\xb7\x46\x69\xb5\xb7\x0f\x90\x58\x0b\x02\xb5"\
-            b"\xbf\x0b\xb6\xfd\xef\x56\xb7\xed\x3f\x08\x56\x3b\x83\x25\x50\xf3\x50\x00\x00\x00"\
-            b"\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
+        # переменная с бинарным значением иконки кнопки настроек
+        self.icon = b"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52\x00\x00\x00\x1e" \
+                    b"\x00\x00\x00\x1e\x08\x06\x00\x00\x00\x3b\x30\xae\xa2\x00\x00\x00\x01\x73\x52\x47" \
+                    b"\x42\x00\xae\xce\x1c\xe9\x00\x00\x00\x04\x67\x41\x4d\x41\x00\x00\xb1\x8f\x0b\xfc" \
+                    b"\x61\x05\x00\x00\x00\x09\x70\x48\x59\x73\x00\x00\x0e\xc4\x00\x00\x0e\xc4\x01\x95" \
+                    b"\x2b\x0e\x1b\x00\x00\x00\x41\x74\x45\x58\x74\x43\x6f\x6d\x6d\x65\x6e\x74\x00\x43" \
+                    b"\x52\x45\x41\x54\x4f\x52\x3a\x20\x67\x64\x2d\x6a\x70\x65\x67\x20\x76\x31\x2e\x30" \
+                    b"\x20\x28\x75\x73\x69\x6e\x67\x20\x49\x4a\x47\x20\x4a\x50\x45\x47\x20\x76\x36\x32" \
+                    b"\x29\x2c\x20\x71\x75\x61\x6c\x69\x74\x79\x20\x3d\x20\x38\x35\x0a\xcc\xf0\xc6\xe1" \
+                    b"\x00\x00\x03\x89\x49\x44\x41\x54\x48\x4b\x7d\x96\x4b\x4e\x2c\x31\x0c\x45\x0b\x9a" \
+                    b"\xbf\x40\x02\x86\x2d\xc4\x9e\x40\xc0\x88\x55\x20\x3e\x62\x8a\x10\x30\xa1\xc7\xbd" \
+                    b"\x0b\xf6\x81\xc4\x98\x7d\x80\xf8\x7f\xea\x71\x4c\x9f\xe0\xce\x2b\xb8\x52\x14\x97" \
+                    b"\x63\x5f\xdf\x38\xa9\xea\x6e\xda\x2f\x7c\x7e\x7e\xb6\x6f\x6f\x6f\x98\x61\xbf\xbf" \
+                    b"\xbf\x87\x2d\x78\xfe\xf8\xf8\x18\x3d\xb5\x61\x13\xa7\xef\xf5\xf5\x35\xe6\x1c\xc7" \
+                    b"\x3a\x03\xc0\x9d\xe3\x89\x8b\xc2\x02\x47\x2e\x9a\x8b\xd5\x90\x14\x40\x9c\xf3\x58" \
+                    b"\xcb\x22\x32\x14\xd4\xb8\xd3\x1a\x99\x38\xdb\x90\x5d\x5c\x5c\xb4\x47\x47\x47\xed" \
+                    b"\xc1\xc1\x41\x7b\x79\x79\x19\x7e\x62\x5e\x5e\x5e\xc2\x06\x5d\x42\x04\x1d\x8a\x1d" \
+                    b"\xe7\xe2\x06\x18\xdc\xa5\xba\xd7\xeb\xb5\x4d\xd3\xb4\x93\x93\x93\x31\x1e\x1e\x1e" \
+                    b"\x46\x2b\xdf\xc8\x45\x32\x9e\x9f\x9f\x0b\x5f\xe3\xf9\x64\xe4\x1d\x82\x3a\x66\x62" \
+                    b"\x62\xa2\x10\x60\x0b\xf2\xf0\x9b\x9f\x45\xe7\x0d\x81\x72\xc6\x59\x25\x09\x77\x77" \
+                    b"\x77\xb1\xb3\x8d\x8d\x8d\x91\xf7\x1b\xec\x70\x6d\x6d\x2d\x6c\x72\x96\x97\x97\x63" \
+                    b"\xf7\xe4\xc8\xb1\xb3\xb3\xd3\xce\xcc\xcc\x94\xae\xd5\x20\x36\x0a\x67\x35\xee\x0e" \
+                    b"\x32\xc6\xd4\xd4\x54\xb1\xe7\xe7\xe7\x63\x56\xb5\x58\x5c\x5c\x2c\x6d\x67\xdd\x79" \
+                    b"\x6e\x6e\x2e\xd6\xe1\x37\xc7\x63\x6d\x6c\x87\x33\x01\xb3\xb3\xb3\x91\x08\xf2\x85" \
+                    b"\xc9\x2d\xcf\x3b\x21\xa7\xe6\x01\x70\xd0\x35\x5f\x27\x8b\x33\x37\x99\xc0\xa4\xdd" \
+                    b"\xdd\xdd\x50\xcd\xb3\xc1\x20\xdb\xb9\x4b\xbf\x81\xc2\x1e\x55\x16\x84\x1d\xdb\x22" \
+                    b"\x59\x02\x09\x51\xaa\x9d\xc5\xa1\xfe\xe9\xe9\x29\x6e\x68\xee\x86\xc4\x8a\x65\x20" \
+                    b"\x1e\xe4\x4e\x19\x57\x2e\x97\x85\x99\x21\x47\x6d\xbe\xfe\xf8\x21\xc0\xcf\xe0\xf2" \
+                    b"\x30\x73\xab\x39\xfb\x1a\x88\xcd\x37\x5e\x1e\x31\xf6\x3a\xe5\xf7\x19\x52\xc1\x0e" \
+                    b"\x59\xa3\x0b\x0c\x44\x48\x44\x81\x9b\x9b\x9b\x28\xa2\x50\x7c\xc4\x10\x0b\x3f\x36" \
+                    b"\x03\x98\x1b\xec\x8f\x8f\x8f\xe1\x94\x0c\x12\x0a\x67\x21\xfa\x6c\x7b\xdd\xbe\xdb" \
+                    b"\xdb\xdb\x31\xb1\x0a\xf5\xae\x64\x2e\x50\x22\xcf\xce\xce\x22\x91\xd1\xef\xf7\x47" \
+                    b"\xde\x1f\x31\xbc\x56\x40\xe5\x00\x1b\x42\x7d\xe4\xde\xdf\xdf\x87\x0d\xf0\xaf\xae" \
+                    b"\xae\x86\x1f\xe1\xe7\xe7\xe7\xe1\x47\x7c\xb9\xd5\xfb\xfb\xfb\xa1\x50\x65\xf8\x2d" \
+                    b"\xba\xb7\xb7\x17\xc9\xae\xe9\x37\x57\x5c\x5d\x5d\x95\x0b\xa5\x18\x67\xb8\x0f\x0f" \
+                    b"\x0f\xc3\xc6\x17\x3b\xc6\x38\x3e\x3e\x0e\x72\x21\x29\x6b\x74\x40\x42\x20\x19\xc8" \
+                    b"\x36\xb7\xdc\xb8\xff\x5a\xfb\xc5\xcd\x0f\x8b\x88\x4a\xec\x60\x38\x1c\x46\x3b\x18" \
+                    b"\xeb\xeb\xeb\xb1\x28\x20\xf7\x52\x81\x2c\x0a\x58\x04\xf2\xa5\xa5\xa5\xf0\xdb\x95" \
+                    b"\x95\x95\x95\xe0\x9c\x9e\x9e\x6e\x4f\x4f\x4f\xc3\x07\x4a\xab\x09\x46\x31\x97\x86" \
+                    b"\xf3\xcc\x85\x00\xc9\x3e\x43\x9a\xd7\x00\x37\xba\xce\xe1\x93\x69\x9e\x42\x00\x76" \
+                    b"\xe9\x6d\xbe\xa5\x80\x04\xc1\x8e\x10\x05\x51\x4d\x20\x88\xa7\xb0\x3c\xb6\x9d\xa2" \
+                    b"\x99\xdb\x8f\x4e\x93\x15\x4a\xc4\x22\x6d\xb3\x1b\xfa\xaf\xaf\xaf\x83\xcc\xbb\x10" \
+                    b"\xca\xbf\x6c\x46\xbe\x03\xc0\x35\x91\xeb\x60\xc7\x4a\x56\x64\x80\xaf\x4f\x16\x03" \
+                    b"\x22\x69\x54\x8c\x5d\xfa\xd5\xc2\x8f\x50\xe2\xb1\x19\x70\xf0\xec\x1d\xc8\xdd\x88" \
+                    b"\xc2\x16\x13\x9b\x9b\x9b\x91\x44\x40\xbd\xd6\x05\x88\xed\x4e\x06\xe2\xf8\x6d\x56" \
+                    b"\x3c\xd0\x2e\xbd\xc0\x41\x32\x85\x38\xab\xdc\x26\x80\x08\x0a\xb8\x1b\x61\x41\x2e" \
+                    b"\x17\x3b\xe2\xf3\x2a\x10\x0f\x0f\xfe\xdc\x09\x46\xb0\xff\xa6\x96\x44\xda\x89\xcd" \
+                    b"\x19\x62\xe3\xb3\xb0\xf3\xc2\xc2\xc2\x58\xbc\xf7\x00\x1b\x41\xa0\xde\x75\x14\xf6" \
+                    b"\x0c\x80\x64\x80\xc4\xad\xad\xad\xd1\xd3\x37\xf0\x51\x48\xf8\xaf\x44\x40\xba\xbd" \
+                    b"\xbd\x1d\xbe\xcc\x5b\xa3\xfc\x03\x01\x79\xe7\xf8\x79\x76\x06\x5e\x30\xfe\xa1\x98" \
+                    b"\xe7\xbb\x4b\x8c\x47\x01\x32\x6f\x17\xc6\xce\x38\xcf\x40\x3b\x77\x81\xf3\x62\x37" \
+                    b"\x79\xb8\xb3\xcc\xd1\x75\x7c\x19\xf1\x1e\xd7\x05\x98\xff\x52\x7e\x72\x72\x12\x1f" \
+                    b"\x7c\xbe\xbd\x83\xc1\x20\x7c\xc6\xe5\x82\x59\x70\x8d\xb1\x0f\x08\xb6\xed\xec\x2a" \
+                    b"\xc8\xba\x7e\x66\x46\x7d\x0c\xa0\x2b\xb7\x46\x69\xb5\xb7\x0f\x90\x58\x0b\x02\xb5" \
+                    b"\xbf\x0b\xb6\xfd\xef\x56\xb7\xed\x3f\x08\x56\x3b\x83\x25\x50\xf3\x50\x00\x00\x00" \
+                    b"\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
         """                                        """
         self.gbA_1 = QtWidgets.QGroupBox(self.centralwidget)
         self.gbA_1.setGeometry(QtCore.QRect(100, 170, 71, 101))
@@ -5056,26 +5102,33 @@ class Ui_MainWindow(object):
 class Ui_SettingsWindow(object):
     def setupUi(self, SettingsWindow):
         SettingsWindow.setObjectName("SettingsWindow")
-        SettingsWindow.resize(310, 290)
+        SettingsWindow.resize(310, 430)
         self.centralwidget = QtWidgets.QWidget(SettingsWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.SpushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.SpushButton.setGeometry(QtCore.QRect(40, 225, 101, 31))
+        self.SpushButton.setGeometry(QtCore.QRect(40, 365, 101, 31))
         self.SpushButton.setObjectName("SpushButton")
         self.SpushButton_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.SpushButton_2.setGeometry(QtCore.QRect(170, 225, 101, 31))
+        self.SpushButton_2.setGeometry(QtCore.QRect(170, 365, 101, 31))
         self.SpushButton_2.setObjectName("SpushButton_2")
         self.SpushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.SpushButton_3.setGeometry(QtCore.QRect(170, 45, 101, 31))
+        self.SpushButton_3.setGeometry(QtCore.QRect(170, 185, 101, 31))
         self.SpushButton_3.setObjectName("SpushButton_3")
+        self.SpushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.SpushButton_4.setGeometry(QtCore.QRect(170, 95, 101, 31))
+        self.SpushButton_4.setObjectName("SpushButton_4")
+        self.SpushButton_4.setEnabled(False)
+        self.SpushButton_5 = QtWidgets.QPushButton(self.centralwidget)
+        self.SpushButton_5.setGeometry(QtCore.QRect(170, 30, 101, 31))
+        self.SpushButton_5.setObjectName("SpushButton_4")
         self.Slabel = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel.setGeometry(QtCore.QRect(40, 100, 221, 21))
+        self.Slabel.setGeometry(QtCore.QRect(40, 240, 221, 21))
         self.Slabel.setObjectName("Slabel")
         self.Slabel_2 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_2.setGeometry(QtCore.QRect(40, 160, 221, 21))
+        self.Slabel_2.setGeometry(QtCore.QRect(40, 300, 221, 21))
         self.Slabel_2.setObjectName("Slabel_2")
         self.Slabel_3 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_3.setGeometry(QtCore.QRect(40, 250, 241, 31))
+        self.Slabel_3.setGeometry(QtCore.QRect(40, 390, 241, 31))
         self.Slabel_3.setObjectName("Slabel_3")
         self.Slabel_3.setStyleSheet('color: red')
         font = QtGui.QFont()
@@ -5084,19 +5137,41 @@ class Ui_SettingsWindow(object):
         self.Slabel_3.setFont(font)
         self.Slabel_3.hide()
         self.Slabel_4 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_4.setGeometry(QtCore.QRect(40, 10, 221, 31))
+        self.Slabel_4.setGeometry(QtCore.QRect(40, 150, 221, 31))
         self.Slabel_4.setObjectName("Slabel_4")
         self.Slabel_5 = QtWidgets.QLabel(self.centralwidget)
-        self.Slabel_5.setGeometry(QtCore.QRect(40, 70, 241, 31))
-        self.Slabel_5.setObjectName("Slabel_3")
+        self.Slabel_5.setGeometry(QtCore.QRect(40, 210, 241, 31))
+        self.Slabel_5.setObjectName("Slabel_5")
         self.Slabel_5.setStyleSheet('color: red')
         font = QtGui.QFont()
         font.setFamily("Calibri")
         font.setPointSize(9)
         self.Slabel_5.setFont(font)
         self.Slabel_5.hide()
+        self.Slabel_6 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_6.setGeometry(QtCore.QRect(40, 120, 241, 31))
+        self.Slabel_6.setObjectName("Slabel_6")
+        self.Slabel_6.setStyleSheet('color: red')
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(9)
+        self.Slabel_6.setFont(font)
+        self.Slabel_6.hide()
+        self.Slabel_7 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_7.setGeometry(QtCore.QRect(40, 70, 221, 31))
+        self.Slabel_7.setObjectName("Slabel_7")
+        self.Slabel_8 = QtWidgets.QLabel(self.centralwidget)
+        self.Slabel_8.setGeometry(QtCore.QRect(40, 5, 221, 31))
+        self.Slabel_8.setObjectName("Slabel_8")
+        self.SCombo = QtWidgets.QComboBox(self.centralwidget)
+        self.SCombo.setGeometry(QtCore.QRect(40, 30, 101, 31))
+        self.SCombo.setObjectName("SCombo")
+        self.Smode = ['Инт. плата',
+                      'ИП и ЦОС',
+                      'ЦОС, МУП, БК']
+        self.SCombo.addItems(self.Smode)
         self.SLineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit.setGeometry(QtCore.QRect(40, 120, 51, 31))
+        self.SLineEdit.setGeometry(QtCore.QRect(40, 260, 51, 31))
         self.SLineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit.setMaxLength(3)
         self.SLineEdit.setValidator(QIntValidator())
@@ -5107,7 +5182,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit.setFont(font)
         self.SLineEdit.setObjectName("SLineEdit")
         self.SLineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_2.setGeometry(QtCore.QRect(100, 120, 51, 31))
+        self.SLineEdit_2.setGeometry(QtCore.QRect(100, 260, 51, 31))
         self.SLineEdit_2.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_2.setMaxLength(3)
         self.SLineEdit_2.setValidator(QIntValidator())
@@ -5118,7 +5193,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_2.setFont(font)
         self.SLineEdit_2.setObjectName("SLineEdit_2")
         self.SLineEdit_3 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_3.setGeometry(QtCore.QRect(160, 120, 51, 31))
+        self.SLineEdit_3.setGeometry(QtCore.QRect(160, 260, 51, 31))
         self.SLineEdit_3.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_3.setMaxLength(3)
         self.SLineEdit_3.setValidator(QIntValidator())
@@ -5129,7 +5204,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_3.setFont(font)
         self.SLineEdit_3.setObjectName("SLineEdit_3")
         self.SLineEdit_4 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_4.setGeometry(QtCore.QRect(220, 120, 51, 31))
+        self.SLineEdit_4.setGeometry(QtCore.QRect(220, 260, 51, 31))
         self.SLineEdit_4.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_4.setMaxLength(3)
         self.SLineEdit_4.setValidator(QIntValidator())
@@ -5140,7 +5215,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_4.setFont(font)
         self.SLineEdit_4.setObjectName("SLineEdit_4")
         self.SLineEdit_5 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_5.setGeometry(QtCore.QRect(40, 180, 51, 31))
+        self.SLineEdit_5.setGeometry(QtCore.QRect(40, 320, 51, 31))
         self.SLineEdit_5.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_5.setMaxLength(3)
         self.SLineEdit_5.setValidator(QIntValidator())
@@ -5151,7 +5226,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_5.setFont(font)
         self.SLineEdit_5.setObjectName("SLineEdit_5")
         self.SLineEdit_6 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_6.setGeometry(QtCore.QRect(100, 180, 51, 31))
+        self.SLineEdit_6.setGeometry(QtCore.QRect(100, 320, 51, 31))
         self.SLineEdit_6.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_6.setMaxLength(3)
         self.SLineEdit_6.setValidator(QIntValidator())
@@ -5162,7 +5237,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_6.setFont(font)
         self.SLineEdit_6.setObjectName("SLineEdit_6")
         self.SLineEdit_7 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_7.setGeometry(QtCore.QRect(160, 180, 51, 31))
+        self.SLineEdit_7.setGeometry(QtCore.QRect(160, 320, 51, 31))
         self.SLineEdit_7.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_7.setMaxLength(3)
         self.SLineEdit_7.setValidator(QIntValidator())
@@ -5173,7 +5248,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_7.setFont(font)
         self.SLineEdit_7.setObjectName("SLineEdit_7")
         self.SLineEdit_8 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_8.setGeometry(QtCore.QRect(220, 180, 51, 31))
+        self.SLineEdit_8.setGeometry(QtCore.QRect(220, 320, 51, 31))
         self.SLineEdit_8.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_8.setMaxLength(3)
         self.SLineEdit_8.setValidator(QIntValidator())
@@ -5184,7 +5259,7 @@ class Ui_SettingsWindow(object):
         self.SLineEdit_8.setFont(font)
         self.SLineEdit_8.setObjectName("SLineEdit_8")
         self.SLineEdit_9 = QtWidgets.QLineEdit(self.centralwidget)
-        self.SLineEdit_9.setGeometry(QtCore.QRect(40, 45, 101, 31))
+        self.SLineEdit_9.setGeometry(QtCore.QRect(40, 185, 101, 31))
         self.SLineEdit_9.setAlignment(QtCore.Qt.AlignCenter)
         self.SLineEdit_9.setMaxLength(3)
         self.SLineEdit_9.setValidator(QIntValidator())
@@ -5194,6 +5269,17 @@ class Ui_SettingsWindow(object):
         font.setPointSize(16)
         self.SLineEdit_9.setFont(font)
         self.SLineEdit_9.setObjectName("SLineEdit_9")
+        self.SSpinBox_10 = QtWidgets.QSpinBox(self.centralwidget)
+        self.SSpinBox_10.setGeometry(QtCore.QRect(40, 95, 101, 31))
+        self.SSpinBox_10.setRange(50, 500)
+        self.SSpinBox_10.setAlignment(QtCore.Qt.AlignCenter)
+        self.SL_10 = ''
+        font = QtGui.QFont()
+        font.setFamily("Calibri")
+        font.setPointSize(16)
+        self.SSpinBox_10.setFont(font)
+        self.SSpinBox_10.setObjectName("SSpinBox_10")
+        self.SSpinBox_10.setEnabled(False)
         SettingsWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(SettingsWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 21))
@@ -5210,12 +5296,22 @@ class Ui_SettingsWindow(object):
         _translate = QtCore.QCoreApplication.translate
         SettingsWindow.setWindowTitle(
             _translate("SettingsWindow", "Settings"))
-        self.SpushButton.setText(_translate("SettingsWindow", "Установить IP"))
+        self.SpushButton.setText(
+            _translate("SettingsWindow",
+                       "Установить IP"))
         self.SpushButton_2.setText(
             _translate(
                 "SettingsWindow",
                 "Закрыть"))
         self.SpushButton_3.setText(
+            _translate(
+                "SettingsWindow",
+                "Применить"))
+        self.SpushButton_4.setText(
+            _translate(
+                "SettingsWindow",
+                "Применить"))
+        self.SpushButton_5.setText(
             _translate(
                 "SettingsWindow",
                 "Применить"))
@@ -5240,17 +5336,30 @@ class Ui_SettingsWindow(object):
             _translate(
                 "SettingsWindow",
                 "Необходимо задать пороговое значение!"))
+        self.Slabel_6.setText(
+            _translate(
+                "SettingsWindow",
+                "Необходимо задать время задержки!"))
+        self.Slabel_7.setText(
+            _translate(
+                "SettingsWindow",
+                "Введите время задержки МШУ (50-500), мкс:"))
+        self.Slabel_8.setText(
+            _translate(
+                "SettingsWindow",
+                "Выберите режим работы ЦОС:"))
 
 
 class mywindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(mywindow, self).__init__()
-        self.ui = Ui_MainWindow()
+        self.ui = Ui_MainWindow()  # маска для обращения к конструктору основного окна
         self.ui.setupUi(self)
         self.window = QtWidgets.QMainWindow()
-        self.uiS = Ui_SettingsWindow()
+        self.uiS = Ui_SettingsWindow()  # маска для обращения к конструктору окна IP-settings
         self.uiS.setupUi(self.window)
+        # сигналы кнопок интерфейса (выполняют соответствующие методы данного класса)
         self.ui.pushButton.clicked.connect(self.btnClicked)
         self.ui.pushButton_1.clicked.connect(self.btn_1Clicked)
         self.ui.pushButton_2.clicked.connect(self.IP_btn)
@@ -5258,11 +5367,27 @@ class mywindow(QtWidgets.QMainWindow):
         self.uiS.SpushButton.clicked.connect(self.ChangeIP)
         self.uiS.SpushButton_2.clicked.connect(self.Quit)
         self.uiS.SpushButton_3.clicked.connect(self.ChangeDB)
+        self.uiS.SpushButton_4.clicked.connect(self.ChangeDelay)
+        self.uiS.SpushButton_5.clicked.connect(self.ChangeMode)
         self.ui.text = 'Пороговое значение чувствительности: ' + \
                        str(self.ui.db) + ', дБ\n'
-        self.ui.text += 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
+        # запись в переменную text информации о текущих IP-адресах касет
+        self.ui.text = 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
         self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
+        # вывод значения переменной text в текстовое окно
         self.ui.textEdit.setText(self.ui.text)
+
+    """ Метод получения логов при ошибке """
+
+    def log_uncaught_exceptions(ex_cls, ex, tb):
+        text = '{}: {}:\n'.format(ex_cls.__name__, ex)
+        import traceback
+        text += ''.join(traceback.format_tb(tb))
+
+        print(text)
+        quit()
+
+    sys.excepthook = log_uncaught_exceptions
 
     def Noise_btn(self):
         ang_d2_d4_c = (15, 75, 135, 195, 255, 315)
@@ -5372,9 +5497,19 @@ class mywindow(QtWidgets.QMainWindow):
         fig.show()
 
     def Quit(self):
+        # разблокировка неактивных виджетов
+        self.uiS.SpushButton_4.setEnabled(True)
+        self.uiS.SSpinBox_10.setEnabled(True)
+        self.uiS.SpushButton_5.setEnabled(True)
+        self.uiS.SCombo.setEnabled(True)
         # отображение принятых значений в главном текстовом окне
-        self.ui.text = 'Пороговое значение чувствительности: ' + \
-                       str(self.ui.db) + ', дБ\n'
+        TextMode = ['только интерфейсная плата.',
+                    'интерфейсная плата и блок ЦОС',
+                    'блок ЦОС, МУП, БК']
+        self.ui.text = 'Режим работы: ' + \
+                       TextMode[self.uiS.SCombo.currentIndex()] + '\n'
+        self.ui.text += 'Пороговое значение чувствительности: ' + \
+                        str(self.ui.db) + ', дБ\n'
         self.ui.text += 'IP-адрес PV-4201: ' + self.ui.IP_4201 + '\n'
         self.ui.text += 'IP-адрес PV-4202: ' + self.ui.IP_4202 + '\n'
         self.ui.textEdit.setText(self.ui.text)
@@ -5382,7 +5517,48 @@ class mywindow(QtWidgets.QMainWindow):
         # закрытие окна настроек
         self.window.close()
 
-    # код работы кнопки "Применить"
+    # код работы кнопки "Применить" (смена режима)
+    def ChangeMode(self):
+        # переменная в которую записывается текущий индекс выпадающего меню
+        ComboIndex = self.uiS.SCombo.currentIndex()
+        # создание списков с набором команд для различных режимов работы
+        pauseList = [self.ui.c_pause_1, self.ui.c_pause_2, self.ui.c_pause_3]
+        technList = [self.ui.c_techn_1, self.ui.c_techn_2, self.ui.c_techn_3]
+        # запись в рабочую переменную режима соответствующего индексу выпадающего меню
+        self.ui.c_pause = pauseList[ComboIndex]
+        self.ui.c_techn = technList[ComboIndex]
+        self.uiS.SpushButton_5.setStyleSheet('color: green')
+        # запрет пользователю вносить дальнейшие изменения в режим работы,
+        # поскольку далее в команде 0х80 необходимо изменить регистры задержки МШУ
+        self.uiS.SpushButton_5.setEnabled(False)
+        self.uiS.SCombo.setEnabled(False)
+        # разблокировка интерфейса изменения задержки МШУ, для
+        # последовательной корректировки команды 0х80
+        self.uiS.SpushButton_4.setEnabled(True)
+        self.uiS.SSpinBox_10.setEnabled(True)
+
+    # код работы кнопки "Применить"(задержка),
+    # находящейся в окне настроек IP-адреса
+    def ChangeDelay(self):
+        # запись в переменную, значения записанного в spinbox
+        self.uiS.SL_10 = self.uiS.SSpinBox_10.value()
+        # преобразование микросекунд в значение задержки
+        # в шестнадцатиричном формате
+        eq = int((int(self.uiS.SL_10) * (10 ** 6)) / 8000)
+        eq = str(hex(eq))
+        eq = eq.replace("0x", "")
+        # расстановка старшего и младшего байта в правильной последовательности
+        eq = eq[2:] + eq[:2]
+        # внесение изменений в регистры задержки команды 0х80
+        self.ui.c_pause = self.ui.c_pause[:24] + eq + self.ui.c_pause[28:]
+        self.ui.c_techn = self.ui.c_techn[:24] + eq + self.ui.c_techn[28:]
+        self.uiS.SpushButton_4.setStyleSheet('color: green')
+        # Запрет на внесение
+        self.uiS.SpushButton_4.setEnabled(False)
+        self.uiS.SSpinBox_10.setEnabled(False)
+
+    # код работы кнопки "Применить(порог)",
+    # находящейся в окне настроек IP-адреса
     def ChangeDB(self):
         self.uiS.SL_9 = self.uiS.SLineEdit_9.text()
         # проверка на пустое поля ввода
@@ -5396,9 +5572,11 @@ class mywindow(QtWidgets.QMainWindow):
             self.uiS.Slabel_5.hide()
             self.uiS.SpushButton_3.setStyleSheet('color: green')
 
-    # код работы кнопки "Установить IP"
+    # код работы кнопки "Установить IP",
+    # находящейся в окне настроек IP-адреса
     def ChangeIP(self):
-
+        # массив переменных в которые будут записаны
+        # данные IP-адесов разделенные по маске
         IP_var = [
             self.uiS.SL,
             self.uiS.SL_2,
@@ -5409,6 +5587,8 @@ class mywindow(QtWidgets.QMainWindow):
             self.uiS.SL_7,
             self.uiS.SL_8]
 
+        # массив полей ввода из которых будут извлечены
+        # текущие данные IP-адесов
         IP_ins = [
             self.uiS.SLineEdit.text(),
             self.uiS.SLineEdit_2.text(),
@@ -5419,30 +5599,34 @@ class mywindow(QtWidgets.QMainWindow):
             self.uiS.SLineEdit_7.text(),
             self.uiS.SLineEdit_8.text()]
 
+        # запись данных из полей ввода IP-адресов
+        # в соответствующие переменные
         IP_var[:] = IP_ins[:]
-
+        # логическая переменная для проверки
+        # полей ввода на пустые значения
         bool = True
-
         # проверка на пустое значение в полях ввода
         for i in IP_var:
             if i == '':
-                # вывод предупреждения
+                # отображение предупреждения о пустом поле ввода
                 self.uiS.Slabel_3.show()
                 self.uiS.SpushButton.setStyleSheet('color: red')
                 bool = False
             else:
                 pass
 
-        if bool:
+        # код записи данных в переменные IP-адресов
+        if bool == True:
             IP_4201 = []
             IP_4202 = []
+            # создание массивов со значениями IP-адресов
             for i in IP_var[:4]:
                 IP_4201.append(i)
             for i in IP_var[4:]:
                 IP_4202.append(i)
-
-            # изменение значения переменной с IP-адресом
+            # запись IP-адреса PV-4201 из массива
             self.ui.IP_4201 = '.'.join(IP_4201)
+            # запись IP-адреса PV-4202 из массива
             self.ui.IP_4202 = '.'.join(IP_4202)
             self.uiS.Slabel_3.hide()
             self.uiS.SpushButton.setStyleSheet('color: green')
@@ -5450,9 +5634,10 @@ class mywindow(QtWidgets.QMainWindow):
     # код работы кнопки "Шестеренка"
     def IP_btn(self):
         # выставление всех значений и цветов лэйблов
-        # в окне настроек по умолчанию
+        # разделение IP-адреса по маске
         IP_4201 = self.ui.IP_4201.split('.')
         IP_4202 = self.ui.IP_4202.split('.')
+        # вывод значений IP-адреса по маске в окно настроек
         self.uiS.SLineEdit.setText(IP_4201[0])
         self.uiS.SLineEdit_2.setText(IP_4201[1])
         self.uiS.SLineEdit_3.setText(IP_4201[2])
@@ -5464,22 +5649,13 @@ class mywindow(QtWidgets.QMainWindow):
         self.uiS.SLineEdit_9.setText(str(self.ui.db))
         self.uiS.Slabel_3.hide()
         self.uiS.Slabel_5.hide()
+        self.uiS.Slabel_6.hide()
         self.uiS.SpushButton.setStyleSheet('color: black')
         self.uiS.SpushButton_3.setStyleSheet('color: black')
+        self.uiS.SpushButton_4.setStyleSheet('color: black')
+        self.uiS.SpushButton_5.setStyleSheet('color: black')
         # открытие окна настроек
         self.window.show()
-
-    """ Метод получения логов при ошибке """
-
-    def log_uncaught_exceptions(ex_cls, ex, tb):
-        text = '{}: {}:\n'.format(ex_cls.__name__, ex)
-        import traceback
-        text += ''.join(traceback.format_tb(tb))
-
-        print(text)
-        quit()
-
-    sys.excepthook = log_uncaught_exceptions
 
     def btn_1Clicked(self):
         self.ui.text = 'Запрос ответа от PV-4201 и PV-4202...\n'
